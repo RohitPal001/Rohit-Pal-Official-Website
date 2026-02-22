@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rohit Pal - Official Website</title>
+    
+    <!-- Google Fonts: Material Symbols & Elegant Bold Font (Outfit) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" rel="stylesheet" />
+
+    <style>
+        /* Material 3 Expressive - Bright Yellow Theme */
+        :root {
+            --md-sys-color-primary: #FFC107; /* Bright Yellow */
+            --md-sys-color-on-primary: #402D00;
+            --md-sys-color-primary-container: #FFE082;
+            --md-sys-color-on-primary-container: #261900;
+            --md-sys-color-surface: #FFFBF2;
+            --md-sys-color-on-surface: #1E1B16;
+            --md-sys-color-surface-variant: #EBE2CF;
+            --md-sys-color-on-surface-variant: #4D4639;
+            --md-sys-color-background: #FFFAF0;
+            
+            --m3-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
+            --m3-shape-large: 28px;
+            --m3-shape-medium: 16px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--md-sys-color-background);
+            color: var(--md-sys-color-on-surface);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Live Bubble Animation Background */
+        .bubbles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background-color: var(--md-sys-color-primary-container);
+            border-radius: 50%;
+            opacity: 0.4;
+            animation: rise infinite ease-in;
+        }
+        @keyframes rise {
+            0% { transform: translateY(0) scale(1); opacity: 0.4; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-120vh) scale(1.5); opacity: 0; }
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* M3 Cards (Boxes) */
+        .m3-card {
+            background-color: var(--md-sys-color-surface);
+            border-radius: var(--m3-shape-large);
+            padding: 32px;
+            box-shadow: var(--m3-elevation-1);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+        
+        .m3-card-tonal {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+
+        .m3-card-sub {
+            background-color: var(--md-sys-color-surface-variant);
+            border-radius: var(--m3-shape-medium);
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        /* Typography */
+        h1, h2, h3 {
+            font-weight: 800;
+            color: var(--md-sys-color-on-surface);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        h1 { font-size: 2.5rem; margin-top: 16px; }
+        h2 { font-size: 1.5rem; margin-bottom: 16px; }
+        h3 { font-size: 1.2rem; margin-bottom: 12px; }
+        p { font-weight: 500; font-size: 1.05rem; }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        /* Header Specifics */
+        .logo-area {
+            width: 48px;
+            height: 48px;
+            /* EDIT: Add your logo SVG file path here later */
+            background-image: url('file.svg'); 
+            background-size: cover;
+            margin-bottom: 24px;
+        }
+        .profile-img-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--md-sys-color-primary);
+            overflow: hidden;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .profile-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* M3 Expressive Buttons (Pill to Squarish) */
+        .m3-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 32px;
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: none;
+            /* Default Pill Shape */
+            border-radius: 9999px; 
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            /* M3 Expressive shape morph transition */
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: var(--m3-elevation-1);
+        }
+
+        .m3-btn:hover {
+            background-color: #FFCA28;
+            transform: translateY(-2px);
+        }
+
+        /* Morphing logic when pressed */
+        .m3-btn:active, .m3-btn.is-pressed {
+            /* Squarish Shape */
+            border-radius: 12px; 
+            transform: scale(0.95);
+            background-color: #FFB300;
+        }
+
+        .social-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        /* Map */
+        .map-container {
+            width: 100%;
+            height: 250px;
+            border-radius: var(--m3-shape-medium);
+            overflow: hidden;
+            margin: 16px 0;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Image Grids & Placeholders */
+        .music-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .music-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--md-sys-color-surface);
+            padding: 12px;
+            border-radius: 12px;
+            flex: 1;
+        }
+        .music-cover {
+            width: 60px;
+            height: 60px;
+            background-color: var(--md-sys-color-primary-container);
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .gallery-img {
+            width: 100%;
+            aspect-ratio: 3 / 4; /* Forced 3:4 vertical ratio */
+            background-color: var(--md-sys-color-surface-variant);
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        /* Lists */
+        ul.styled-list {
+            list-style: none;
+        }
+        ul.styled-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        ul.styled-list li::before {
+            content: 'verified';
+            font-family: 'Material Symbols Rounded';
+            color: var(--md-sys-color-primary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-weight: 700;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        /* Icons */
+        .icon {
+            font-family: 'Material Symbols Rounded';
+            font-size: 28px;
+            color: var(--md-sys-color-on-surface);
+        }
+        
+        /* Utility */
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .mt-2 { margin-top: 16px; }
+
+        /* Header Animation */
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-6px) scale(1.01); }
+        }
+        .header-card-anim {
+            animation: subtleFloat 5s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Live Bubble Animation -->
+    <div class="bubbles-container" id="bubbles"></div>
+
+    <div class="container">
+        
+        <!-- Header Box -->
+        <div class="m3-card m3-card-tonal header-card-anim">
+            <!-- Blank top left corner for logo (file.svg) -->
+            <div class="logo-area"></div>
+            
+            <!-- Bottom: Blank img tag with circle shape -->
+            <div class="profile-img-container">
+                <!-- EDIT: Add your photo URL in the src below -->
+                <img src="dp.jpg" alt="profile photo of Rohit Pal" id="profile-photo">
+            </div>
+            
+            <h1>Rohit Pal</h1>
+            <div class="subtitle">Technology Enthusiast</div>
+        </div>
+
+        <!-- Address Box -->
+        <div class="m3-card">
+            <h2><span class="icon">location_on</span> Address</h2>
+            
+            <p><strong>Jiaganj - 742123, Murshidabad, West Bengal, India.</strong></p>
+            
+            <!-- Workable Google Maps Widget for Jiaganj -->
+            <div class="map-container">
+                <iframe src="https://maps.google.com/maps?q=Jiaganj,742123,India&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+
+        <!-- Birthday Box -->
+        <div class="m3-card">
+            <h2><span class="icon">cake</span> Birthday Details</h2>
+            <div class="m3-card-sub">
+                <p><strong>Birthday:</strong> 16th November, 2007</p>
+                <p><strong>Age:</strong> <span id="age-calc">Loading...</span></p>
+                <p><strong>Next Birthday In:</strong> <span id="bday-countdown">Loading...</span></p>
+            </div>
+        </div>
+
+        <!-- Socials Box -->
+        <div class="m3-card">
+            <h2><span class="icon">connect_without_contact</span> I'm On</h2>
+            <div class="social-grid">
+                <!-- YouTube Button with M3 morphing logic -->
+                <a href="https://youtube.com/@rohitpal001?si=HXs0K6bQyBW-d6py" target="_blank" class="m3-btn">
+                    <span class="icon">play_circle</span> YouTube
+                </a>
+
+                <!-- EDIT: Add links to href="#" below -->
+                <a href="https://www.instagram.com/rohitpal_01?igsh=YXNtcGh6aDBjcGgz" target="_blank" class="m3-btn"><span class="icon">photo_camera</span> Instagram</a>
+                <a href="https://www.facebook.com/share/1LmvJQBqVS/" target="_blank" class="m3-btn"><span class="icon">thumb_up</span> Facebook</a>
+                <a href="https://www.snapchat.com/add/rohitpal000035?share_id=kdWwM0TTLOE&locale=en-IN" target="_blank" class="m3-btn"><span class="icon">chat_bubble</span> Snapchat</a>
+                <a href="https://pin.it/2OBhQmeUi" target="_blank" class="m3-btn"><span class="icon">push_pin</span> Pinterest</a>
+                <a href="https://maps.app.goo.gl/P8RCRLtFwc39HdvC9?g_st=ac" target="_blank" class="m3-btn"><span class="icon">map</span> Google Maps</a>
+                <a href="https://x.com/RohitPal_001" target="_blank" class="m3-btn"><span class="icon">close</span> X</a>
+                <a href="https://in.linkedin.com/in/rohit-pal-7a9a58372" target="_blank" class="m3-btn"><span class="icon">work</span> LinkedIn</a>
+            </div>
+        </div>
+
+        <!-- My Favourites Box -->
+        <div class="m3-card">
+            <h2><span class="icon">favorite</span> My Favourites</h2>
+            
+            <!-- Sub Box: Music -->
+            <div class="m3-card-sub">
+                <h3><span class="icon">music_note</span> Music</h3>
+                <!-- Blank img tag for later use -->
+                <img src="" alt="" style="display:none; width:100%; border-radius:12px; margin-bottom: 12px;" id="music-banner">
+                
+                <div class="music-grid">
+                    <div class="music-item">
+                        <!-- EDIT: Add Imagine Dragons cover image src -->
+                        <img src="https://cdn-images.dzcdn.net/images/artist/1ba025c23cae3dee14b51152990285fc/1900x1900-000000-80-0-0.jpg" alt="Imagine Dragons Image" class="music-cover">
+                        <div>
+                            <strong>Imagine Dragons</strong>
+                            <p style="font-size: 0.9rem;">Believer, Bones</p>
+                        </div>
+                    </div>
+                    <div class="music-item">
+                        <!-- EDIT: Add Ed Sheeran cover image src -->
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTIRQE5uxBeMrSRxQ0-xpM-9ayJLIx1DBnqPWR3u3gaSZxUE4Jz7CFzuo&s=10" alt="Ed Sheeran Image" class="music-cover">
+                        <div>
+                            <strong>Ed Sheeran</strong>
+                            <p style="font-size: 0.9rem;">Sapphire, Shape Of You</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub Box: Coding -->
+            <div class="m3-card-sub">
+                <h3><span class="icon">code</span> Coding</h3>
+                <p>My Favourite Languages:</p>
+                <div class="mt-2" style="display:flex; gap: 8px; flex-wrap: wrap;">
+                    <span class="m3-btn" style="padding: 8px 16px; font-size: 0.9rem; pointer-events: none;">HTML CSS JS</span>
+                    <span class="m3-btn" style="padding: 8px 16px; font-size: 0.9rem; pointer-events: none;">C++</span>
+                    <span class="m3-btn" style="padding: 8px 16px; font-size: 0.9rem; pointer-events: none;">C</span>
+                    <span class="m3-btn" style="padding: 8px 16px; font-size: 0.9rem; pointer-events: none;">VB</span>
+                    <span class="m3-btn" style="padding: 8px 16px; font-size: 0.9rem; pointer-events: none;">Python</span>
+                </div>
+            </div>
+
+            <!-- Sub Box: Fields -->
+            <div class="m3-card-sub">
+                <h3><span class="icon">memory</span> Most Favourite Fields</h3>
+                <ul class="styled-list">
+                    <li>Technology</li>
+                    <li>Software Development</li>
+                    <li>Programming & Coding</li>
+                    <li>Mobile Phone Tech</li>
+                    <li>Artificial Intelligence (AI)</li>
+                    <li>Contributing On Google Maps As A Local Guide</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Education Box -->
+        <div class="m3-card">
+            <h2><span class="icon">school</span> Education</h2>
+            <div class="m3-card-sub">
+                <p><strong>Primary School:</strong> Shri Ramkrishna Saradha Vidyapith</p>
+                <p><strong>High School:</strong> Jiaganj Birendra Singh Singhi High School (H. S.)</p>
+                <p><strong>Present Class:</strong> XII (H. S.)</p>
+            </div>
+        </div>
+
+        <!-- Timeless Moments Box -->
+        <div class="m3-card">
+            <h2><span class="icon">collections</span> Timeless Moments</h2>
+            <div class="gallery-grid">
+                <!-- EDIT: Add your photo URLs in the src attribute. They are forced to 3:4 ratio via CSS -->
+                <img src="p1.jpg" alt="Moment 1" class="gallery-img">
+                <img src="p2.jpg" alt="Moment 2" class="gallery-img">
+                <img src="p3.jpg" alt="Moment 3" class="gallery-img">
+                <img src="p4.jpg" alt="Moment 4" class="gallery-img">
+            </div>
+        </div>
+
+        <!-- Also Known As Box -->
+        <div class="m3-card">
+            <h2><span class="icon">badge</span> Also Known As</h2>
+            <h1 style="color: var(--md-sys-color-primary); font-size: 2rem; margin-top: 0;">World Wide Data RHT</h1>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Made By Rohit Pal</p>
+            <p>&#169; Rohit Pal - <span id="current-year"></span></p>
+        </footer>
+
+    </div>
+
+    <script>
+        // 1. Button Interaction Script (Pill to Squarish Animation for Touch/Mouse)
+        const buttons = document.querySelectorAll('.m3-btn');
+        buttons.forEach(btn => {
+            // Mouse events
+            btn.addEventListener('mousedown', () => btn.classList.add('is-pressed'));
+            btn.addEventListener('mouseup', () => btn.classList.remove('is-pressed'));
+            btn.addEventListener('mouseleave', () => btn.classList.remove('is-pressed'));
+            // Touch events for mobile
+            btn.addEventListener('touchstart', () => btn.classList.add('is-pressed'));
+            btn.addEventListener('touchend', () => btn.classList.remove('is-pressed'));
+        });
+
+        // 2. Bubble Animation Generator
+        const bubbleContainer = document.getElementById('bubbles');
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            
+            // Random size, position, and animation duration
+            const size = Math.random() * 40 + 20; // 20px to 60px
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+            bubble.style.left = `${Math.random() * 100}vw`;
+            bubble.style.animationDuration = `${Math.random() * 3 + 4}s`; // 4s to 7s
+            
+            bubbleContainer.appendChild(bubble);
+            
+            // Remove bubble after animation completes to save memory
+            setTimeout(() => {
+                bubble.remove();
+            }, 7000);
+        }
+        setInterval(createBubble, 400); // create a new bubble every 400ms
+
+        // 3. Date & Time Calculations
+        const birthDate = new Date(2007, 10, 16); // Month is 0-indexed (10 = November)
+        
+        function calculateDates() {
+            const now = new Date();
+            
+            // Calculate Age
+            let ageYears = now.getFullYear() - birthDate.getFullYear();
+            let ageMonths = now.getMonth() - birthDate.getMonth();
+            let ageDays = now.getDate() - birthDate.getDate();
+
+            if (ageDays < 0) {
+                ageMonths--;
+                ageDays += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+            }
+            if (ageMonths < 0) {
+                ageYears--;
+                ageMonths += 12;
+            }
+            document.getElementById('age-calc').innerText = `${ageYears} Years, ${ageMonths} Months, ${ageDays} Days`;
+
+            // Calculate Next Birthday
+            let nextBday = new Date(now.getFullYear(), 10, 16); // This year's Nov 16
+            if (now.getTime() > nextBday.getTime()) {
+                // If birthday has passed this year, next one is next year
+                nextBday.setFullYear(now.getFullYear() + 1);
+            }
+            
+            const diffTime = Math.abs(nextBday - now);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+            
+            document.getElementById('bday-countdown').innerText = `${diffDays} Days`;
+            
+            // Update Footer Year
+            document.getElementById('current-year').innerText = now.getFullYear();
+        }
+
+        // Run calculations immediately
+        calculateDates();
+        
+        // Update calculations every minute just in case page stays open
+        setInterval(calculateDates, 60000);
+    </script>
+</body>
+</html>
