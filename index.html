@@ -272,6 +272,40 @@
             object-fit: cover;
         }
 
+        /* Search Section Styling */
+        .search-form {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .search-input {
+            flex: 1;
+            padding: 16px 24px;
+            border-radius: 9999px; /* Pill shape */
+            border: 2px solid var(--md-sys-color-primary-container);
+            background-color: var(--md-sys-color-surface-variant);
+            color: var(--md-sys-color-on-surface);
+            font-size: 1.1rem;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+        }
+        .search-input:focus {
+            border-color: var(--md-sys-color-primary);
+            background-color: var(--md-sys-color-surface);
+            box-shadow: 0 0 0 4px var(--md-sys-color-primary-container);
+        }
+        /* Make search form responsive for smaller phones */
+        @media (max-width: 500px) {
+            .search-form {
+                flex-direction: column;
+            }
+            .search-form .m3-btn {
+                width: 100%;
+            }
+        }
+
         /* Lists */
         ul.styled-list {
             list-style: none;
@@ -474,6 +508,19 @@
         <div class="m3-card">
             <h2><span class="icon">badge</span> Also Known As</h2>
             <h1 style="color: var(--md-sys-color-primary); font-size: 2rem; margin-top: 0;">World Wide Data RHT</h1>
+        </div>
+
+        <!-- Search Box -->
+        <div class="m3-card">
+            <h2><span class="icon">search</span> Quick Search</h2>
+            <p>Search anything on Google directly from here!</p>
+            <!-- Native HTML form directly queries Google -->
+            <form action="https://www.google.com/search" method="GET" target="_blank" class="search-form">
+                <input type="text" name="q" placeholder="Search Anything" class="search-input" required autocomplete="off">
+                <button type="submit" class="m3-btn">
+                    <span class="icon">search</span> Search
+                </button>
+            </form>
         </div>
 
         <!-- Footer -->
