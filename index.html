@@ -135,8 +135,21 @@
             z-index: -1;
             opacity: 1.0; /* Lets the theme yellow box color show through cleanly */
             filter: blur(2px); /* Blurry effect */
-            /* Fades the image at the edges into the box background */
-            
+        }
+
+        /* Live Date & Time Styling */
+        .live-date-time {
+            position: absolute;
+            top: 24px;
+            left: 32px;
+            right: 32px;
+            display: flex;
+            justify-content: space-between;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 2;
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.6); /* For readability over images */
         }
 
         .logo-area {
@@ -146,6 +159,7 @@
             background-image: url('file.svg'); 
             background-size: cover;
             margin-bottom: 24px;
+            margin-top: 16px; /* Added slight top margin to clear the date/time */
         }
         .profile-img-container {
             width: 120px;
@@ -313,6 +327,13 @@
         
         <!-- Header Box with Custom Background Integration -->
         <div class="m3-card m3-card-tonal header-card-anim header-card-custom">
+            
+            <!-- Live Date & Time View -->
+            <div class="live-date-time">
+                <span id="live-date">Loading...</span>
+                <span id="live-time">Loading...</span>
+            </div>
+
             <!-- Blank top left corner for logo (file.svg) -->
             <div class="logo-area"></div>
             
@@ -498,7 +519,33 @@
         }
         setInterval(createBubble, 400); // create a new bubble every 400ms
 
-        // 3. Date & Time Calculations
+        // 3. Live Date and Time Script
+        function updateLiveDateTime() {
+            const now = new Date();
+            
+            // Format Date: DD MMM, YYYY
+            const day = String(now.getDate()).padStart(2, '0');
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            document.getElementById('live-date').innerText = `${day} ${month}, ${year}`;
+            
+            // Format Time: HH:MM AM/PM
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            const formattedHours = String(hours).padStart(2, '0');
+            
+            document.getElementById('live-time').innerText = `${formattedHours}:${minutes} ${ampm}`;
+        }
+        
+        // Call immediately, then update every second (1000ms)
+        updateLiveDateTime();
+        setInterval(updateLiveDateTime, 1000);
+
+        // 4. Date & Time Calculations for Birthday
         const birthDate = new Date(2007, 10, 16); // Month is 0-indexed (10 = November)
         
         function calculateDates() {
@@ -543,7 +590,3 @@
     </script>
 </body>
 </html>
-
-
-
-
