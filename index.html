@@ -278,18 +278,26 @@
         }
         
         .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 12px;
-            margin-top: 16px;
-        }
+        -webkit-tap-highlight-color: transparent;
+        tap-highlight-color: transparent; 
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+       }
+
         .gallery-img {
-            width: 100%;
-            aspect-ratio: 3 / 4; /* Forced 3:4 vertical ratio */
-            background-color: var(--md-sys-color-surface-variant);
-            border-radius: 12px;
-            object-fit: cover;
+        width: 100%;
+        aspect-ratio: 3 / 4;
+        background-color: var(--md-sys-color-surface-variant);
+        border-radius: 12px;
+        object-fit: cover;
+        transition: filter 0.15s ease;
         }
+
+        .gallery-img:active {
+        filter: blur(3px);
+        } 
 
         /* Search Section Styling */
         .search-form {
@@ -686,5 +694,6 @@
     </script>
 </body>
 </html>
+
 
 
