@@ -77,7 +77,9 @@
             gap: 24px;
         }
 
-        /* M3 Cards (Boxes) */
+        /* ===== PREMIUM FADE ANIMATIONS ===== */
+        
+        /* Initial state - hidden and offset */
         .m3-card {
             background-color: var(--md-sys-color-surface);
             border-radius: var(--m3-shape-large);
@@ -86,8 +88,23 @@
             position: relative;
             overflow: hidden;
             transition: transform 0.2s ease;
+            
+            /* Premium fade animation initial state */
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+            filter: blur(8px);
+            transition: opacity 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        filter 1.2s ease-out;
         }
-        
+
+        /* Animated state - visible and in place */
+        .m3-card.fade-in {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
         .m3-card-tonal {
             background-color: var(--md-sys-color-primary-container);
             color: var(--md-sys-color-on-primary-container);
@@ -360,7 +377,7 @@
     <div class="container">
         
         <!-- Header Box with Custom Background Integration -->
-        <div class="m3-card m3-card-tonal header-card-anim header-card-custom">
+        <div class="m3-card m3-card-tonal header-card-anim header-card-custom fade-in">
             
             <!-- Live Date & Time View -->
             <div class="live-date-time">
@@ -379,7 +396,7 @@
             
             <h1> <font color="white"> Rohit Pal </font> </h1>
             <div class="subtitle">Technology Enthusiast</div>
-            <div class="subtitle"><h6> <font color="#FFB300"> I Believe Technology Can Solve Humanity’s Greatest Challenges. </font></h6></div>
+            <div class="subtitle"><h6> <font color="#FFB300"> I Believe Technology Can Solve Humanity's Greatest Challenges. </font></h6></div>
         </div>
 
         <!-- Address Box -->
@@ -498,7 +515,6 @@
         <div class="m3-card">
             <h2><span class="icon">collections</span> Timeless Moments</h2>
             <div class="gallery-grid">
-                <!-- EDIT: Add your photo URLs in the src attribute. They are forced to 3:4 ratio via CSS -->
                 <img src="p1.jpg" alt="Moment 1" class="gallery-img">
                 <img src="p2.jpg" alt="Moment 2" class="gallery-img">
                 <img src="p3.jpg" alt="Moment 3" class="gallery-img">
@@ -536,6 +552,28 @@
     </div>
 
     <script>
+        // ===== PREMIUM FADE ANIMATION WITH INTERSECTION OBSERVER =====
+        // This detects when cards enter the viewport and triggers the fade-in animation
+        
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.m3-card').forEach(card => {
+            observer.observe(card);
+        });
+
         // 1. Button Interaction Script (Pill to Squarish Animation for Touch/Mouse)
         const buttons = document.querySelectorAll('.m3-btn');
         buttons.forEach(btn => {
@@ -641,4 +679,3 @@
     </script>
 </body>
 </html>
-
