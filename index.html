@@ -401,6 +401,10 @@
                 <span id="live-time">Loading...</span>
             </div>
 
+            <!-- Hero Section Greetings -->
+            <br>
+            <div id="hero-greeting" class="subtitle">Welcome!</div>
+
             <!-- Blank top left corner for logo (file.svg) -->
             <div class="logo-area"></div>
             
@@ -626,6 +630,38 @@
     </div>
 
     <script>
+
+        // Hero Section Greetings
+        const greetings = [
+				{ range: [5, 12],  text: "Good Morning" },
+				{ range: [12, 16], text: "Good Afternoon" },
+				{ range: [16, 19], text: "Good Evening" },
+				{ range: [20, 24], text: "Good Night" },
+				{ range: [0, 5],   text: "Good Night" },
+			];
+
+				function loadGreeting() {
+				const hour = new Date().getHours();
+				const { text } = greetings.find(g => hour >= g.range[0] && hour < g.range[1]);
+				const el = document.getElementById("hero-greeting");
+
+				navigator.geolocation.getCurrentPosition(async (pos) => {
+				const { latitude: lat, longitude: lon } = pos.coords;
+				const res = await fetch(
+    			`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+    			{ headers: { "Accept-Language": "Enter" } }
+			);
+				const data = await res.json();
+				const addr = data.address;
+				const city = addr.city || addr.town || addr.village || addr.county || "Friend";
+				el.textContent = `${text}, ${city}!`;
+			}, () => {
+				el.textContent = `${text}!`;
+			});
+		}
+
+			loadGreeting();
+        
         // ===== PREMIUM FADE ANIMATION WITH INTERSECTION OBSERVER =====
         // This detects when cards enter the viewport and triggers the fade-in animation
         
