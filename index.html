@@ -393,6 +393,33 @@
               font-size: inherit;
               font-weight: inherit;
         }
+	/* Weather Style */
+		#weather-strip {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 16px;
+    }
+
+        .weather-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: rgba(255, 255, 255, 0.25);
+        color: white;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 600;
+        font-size: 0.88rem;
+        padding: 6px 14px;
+        border-radius: 9999px;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,0.35);
+        text-shadow: 0px 1px 3px rgba(0,0,0,0.3);
+    }
+        .weather-chip .material-symbols-rounded {
+        font-size: 18px;
+        color: white;
+    }
     </style>
 </head>
 <body>
@@ -414,6 +441,18 @@
             <!-- Hero Section Greetings -->
             <br>
             <div id="hero-greeting" class="subtitle">Welcome!</div>
+
+			<!-- Weather Strip -->
+            <div id="weather-strip">
+            <div class="weather-chip">
+                <span class="material-symbols-rounded" id="wb-ms-icon">device_thermostat</span>
+                <span id="wb-temp">--°C</span>
+            </div>
+            <div class="weather-chip">
+                <span class="material-symbols-rounded">partly_cloudy_day</span>
+                <span id="wb-desc">Loading...</span>
+            </div>
+            </div>
 
             <!-- Blank top left corner for logo (file.svg) -->
             <div class="logo-area"></div>
@@ -669,26 +708,60 @@
 			];
 
 				function loadGreeting() {
-				const hour = new Date().getHours();
-				const { text } = greetings.find(g => hour >= g.range[0] && hour < g.range[1]);
-				const el = document.getElementById("hero-greeting");
+    const hour = new Date().getHours();
+    const { text } = greetings.find(g => hour >= g.range[0] && hour < g.range[1]);
+    const el = document.getElementById("hero-greeting");
 
-				navigator.geolocation.getCurrentPosition(async (pos) => {
-				const { latitude: lat, longitude: lon } = pos.coords;
-				const res = await fetch(
-    			`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
-    			{ headers: { "Accept-Language": "Enter" } }
-			);
-				const data = await res.json();
-				const addr = data.address;
-				const city = addr.city || addr.town || addr.village || addr.county || "Friend";
-				el.textContent = `${text}, ${city}!`;
-			}, () => {
-				el.textContent = `${text}!`;
-			});
-		}
+    const WMO = {
+        0:['Clear Sky','clear_day'],
+        1:['Mainly Clear','partly_cloudy_day'],2:['Partly Cloudy','partly_cloudy_day'],3:['Overcast','cloud'],
+        45:['Foggy','foggy'],48:['Icy Fog','foggy'],
+        51:['Drizzle','rainy'],53:['Drizzle','rainy'],55:['Heavy Drizzle','rainy'],
+        61:['Light Rain','rainy'],63:['Rain','rainy'],65:['Heavy Rain','rainy'],
+        71:['Light Snow','ac_unit'],73:['Snow','ac_unit'],75:['Heavy Snow','ac_unit'],
+        80:['Showers','rainy'],81:['Showers','rainy'],82:['Heavy Showers','thunderstorm'],
+        95:['Thunderstorm','thunderstorm'],99:['Severe Storm','thunderstorm'],
+    };
 
-			loadGreeting();
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude: lat, longitude: lon } = pos.coords;
+
+        // City name (Nominatim)
+        try {
+            const res = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+                { headers: { "Accept-Language": "en" } }
+            );
+            const data = await res.json();
+            const addr = data.address;
+            const city = addr.city || addr.town || addr.village || addr.county || "Friend";
+            el.textContent = `${text}, ${city}!`;
+        } catch {
+            el.textContent = `${text}!`;
+        }
+
+        // Weather (Open-Meteo)
+        try {
+            const wRes = await fetch(
+                `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode&wind_speed_unit=kmh&timezone=auto`
+            );
+            const wData = await wRes.json();
+            const c = wData.current;
+            const [desc, iconName] = WMO[c.weathercode] || ['--', 'device_thermostat'];
+            document.getElementById('wb-ms-icon').textContent = iconName;
+            document.getElementById('wb-temp').textContent = `${Math.round(c.temperature_2m)}°C`;
+            document.getElementById('wb-desc').textContent = desc;
+        } catch {
+            document.getElementById('wb-desc').textContent = 'Unavailable';
+        }
+
+        }, () => {
+        el.textContent = `${text}!`;
+        document.getElementById('wb-desc').textContent = 'Location denied';
+      });
+    }
+
+    loadGreeting();
         
         // ===== PREMIUM FADE ANIMATION WITH INTERSECTION OBSERVER =====
         // This detects when cards enter the viewport and triggers the fade-in animation
@@ -817,5 +890,3 @@
     </script>
 </body>
 </html>
-
-
