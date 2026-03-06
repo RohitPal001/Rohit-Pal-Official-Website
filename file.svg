@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="110" height="50" viewBox="0 0 110 50">
+  <defs>
+    <!-- Animated yellow gradient -->
+    <linearGradient id="yellowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD700">
+        <animate attributeName="stop-color"
+          values="#FFD700; #FFF176; #FFA500; #FFEC3D; #FFD700"
+          dur="3s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" stop-color="#FFEC3D">
+        <animate attributeName="stop-color"
+          values="#FFEC3D; #FFA500; #FFD700; #FFF176; #FFEC3D"
+          dur="3s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" stop-color="#FFA500">
+        <animate attributeName="stop-color"
+          values="#FFA500; #FFD700; #FFEC3D; #FF8C00; #FFA500"
+          dur="3s" repeatCount="indefinite"/>
+      </stop>
+      <animateTransform attributeName="gradientTransform"
+        type="rotate"
+        values="0 0.5 0.5; 360 0.5 0.5"
+        dur="4s"
+        repeatCount="indefinite"
+        gradientUnits="objectBoundingBox"/>
+    </linearGradient>
+
+    <!-- Shimmer overlay -->
+    <linearGradient id="shimmer" x1="-100%" y1="0%" x2="200%" y2="0%">
+      <stop offset="0%" stop-color="white" stop-opacity="0"/>
+      <stop offset="50%" stop-color="white" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+      <animateTransform attributeName="gradientTransform"
+        type="translate"
+        values="-1 0; 2 0; -1 0"
+        dur="2.5s"
+        repeatCount="indefinite"/>
+    </linearGradient>
+
+    <!-- Warm glow filter -->
+    <filter id="glow" x="-20%" y="-30%" width="140%" height="160%">
+      <feGaussianBlur stdDeviation="1.8" result="blur"/>
+      <feFlood flood-color="#FFA500" flood-opacity="0.3" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="110" height="50" fill="none"/>
+
+  <!-- Main handwritten text with yellow gradient -->
+  <text x="55" y="35"
+    font-family="'Brush Script MT', 'Segoe Script', 'Comic Sans MS', cursive"
+    font-size="30"
+    font-weight="bold"
+    text-anchor="middle"
+    fill="url(#yellowGrad)"
+    filter="url(#glow)"
+    letter-spacing="1.5">Rohit</text>
+
+
+</svg>
