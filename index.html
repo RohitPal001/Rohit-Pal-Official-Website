@@ -420,11 +420,136 @@
         font-size: 18px;
         color: white;
     }
+		/* ===== DARK THEME VARIABLES ===== */
+body.dark-theme {
+    --md-sys-color-primary: #FFC107;
+    --md-sys-color-on-primary: #402D00;
+    --md-sys-color-primary-container: #3a2c00;
+    --md-sys-color-on-primary-container: #FFE082;
+    --md-sys-color-surface: #1E1B16;
+    --md-sys-color-on-surface: #EAE1D4;
+    --md-sys-color-surface-variant: #2C2814;
+    --md-sys-color-on-surface-variant: #CDC5B4;
+    --md-sys-color-background: #121008;
+}
+body.dark-theme .m3-card { background-color: var(--md-sys-color-surface); }
+body.dark-theme .m3-card-tonal { background-color: var(--md-sys-color-primary-container); }
+body.dark-theme .m3-card-sub { background-color: rgba(255,255,255,0.05); }
+body.dark-theme .music-item { background-color: rgba(255,255,255,0.05); }
+body.dark-theme h1, body.dark-theme h2, body.dark-theme h3 { color: var(--md-sys-color-on-surface); }
+body.dark-theme .search-input {
+    background-color: var(--md-sys-color-surface-variant);
+    color: var(--md-sys-color-on-surface);
+    border-color: var(--md-sys-color-primary-container);
+}
+body.dark-theme footer { color: var(--md-sys-color-on-surface-variant); }
+
+/* ===== LIQUID GLASS NAVBAR ===== */
+.top-navbar {
+    position: sticky;
+    top: 12px;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    margin: 12px 24px 0;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.08),
+        0 1px 0px rgba(255,255,255,0.6) inset,
+        0 -1px 0px rgba(0,0,0,0.06) inset;
+    transition: background 0.4s ease, box-shadow 0.4s ease;
+}
+body.dark-theme .top-navbar {
+    background: rgba(30, 27, 22, 0.45);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.4),
+        0 1px 0px rgba(255,255,255,0.08) inset,
+        0 -1px 0px rgba(0,0,0,0.3) inset;
+}
+.navbar-logo {
+    height: 26px;
+    width: auto;
+}
+/* Theme Toggle Button */
+.theme-toggle-btn {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 193, 7, 0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    padding: 0;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+.theme-toggle-btn:hover { background: rgba(255, 193, 7, 0.28); }
+.theme-toggle-btn:active { transform: scale(0.9); }
+.theme-icon-wrap {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.icon-sun, .icon-moon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-family: 'Material Symbols Rounded';
+    font-size: 22px;
+    color: var(--md-sys-color-primary);
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    line-height: 1;
+}
+.icon-sun  { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+.icon-moon { opacity: 0; transform: translate(-50%, -50%) rotate(-90deg) scale(0.5); }
+body.dark-theme .icon-sun  { opacity: 0; transform: translate(-50%, -50%) rotate(90deg) scale(0.5); }
+body.dark-theme .icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+
+/* ===== THEME TRANSITION OVERLAY ===== */
+#theme-overlay {
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    clip-path: circle(0% at var(--ox, 95%) var(--oy, 5%));
+    transition: none;
+}
+#theme-overlay.expanding {
+    transition: clip-path 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    clip-path: circle(160% at var(--ox, 95%) var(--oy, 5%));
+}
     </style>
 </head>
 <body>
+	<!-- Theme Transition Overlay -->
+<div id="theme-overlay"></div>
 
-    <!-- Live Bubble Animation -->
+<!-- Liquid Glass Navbar -->
+<nav class="top-navbar">
+    <!-- EDIT: Replace file.svg with your logo file path -->
+    <img src="file.svg" alt="Logo" class="navbar-logo">
+    <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme">
+        <div class="theme-icon-wrap">
+            <span class="icon-sun">light_mode</span>
+            <span class="icon-moon">dark_mode</span>
+        </div>
+    </button>
+</nav>
+	<!-- Live Bubble Animation -->
     <div class="bubbles-container" id="bubbles"></div>
 
     <div class="container">
@@ -913,7 +1038,47 @@
         
         // Update calculations every minute just in case page stays open
         setInterval(calculateDates, 60000);
+
+		// ===== THEME TOGGLE WITH LIQUID ANIMATION =====
+const themeBtn = document.getElementById('theme-toggle-btn');
+const overlay  = document.getElementById('theme-overlay');
+
+if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-theme');
+}
+
+themeBtn.addEventListener('click', () => {
+    const isDark = document.body.classList.contains('dark-theme');
+    const rect   = themeBtn.getBoundingClientRect();
+    const ox     = ((rect.left + rect.width  / 2) / window.innerWidth  * 100).toFixed(1) + '%';
+    const oy     = ((rect.top  + rect.height / 2) / window.innerHeight * 100).toFixed(1) + '%';
+
+    overlay.style.setProperty('--ox', ox);
+    overlay.style.setProperty('--oy', oy);
+    overlay.style.background = isDark ? '#FFFAF0' : '#121008';
+
+    overlay.classList.remove('expanding');
+    overlay.style.transition = 'none';
+    overlay.style.clipPath   = `circle(0% at ${ox} ${oy})`;
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            overlay.classList.add('expanding');
+            overlay.style.transition = 'clip-path 0.65s cubic-bezier(0.4, 0, 0.2, 1)';
+            overlay.style.clipPath   = `circle(160% at ${ox} ${oy})`;
+
+            setTimeout(() => {
+                document.body.classList.toggle('dark-theme');
+                localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+            }, 300);
+
+            setTimeout(() => {
+                overlay.classList.remove('expanding');
+                overlay.style.clipPath = 'circle(0% at 50% 50%)';
+            }, 680);
+        });
+    });
+});
     </script>
 </body>
 </html>
-
