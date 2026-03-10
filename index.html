@@ -532,6 +532,73 @@ body.dark-theme .icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
     transition: clip-path 0.65s cubic-bezier(0.4, 0, 0.2, 1);
     clip-path: circle(160% at var(--ox, 95%) var(--oy, 5%));
 }
+
+		/* ===== TOOLS POPUP ===== */
+.tools-wrapper {
+    position: relative;
+}
+.tools-popup {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    min-width: 200px;
+    background: rgba(255, 250, 240, 0.97);
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1001;
+}
+.tools-popup.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+body.dark-theme .tools-popup {
+    background: rgba(30, 27, 22, 0.99);
+    border-color: rgba(255,255,255,0.1);
+}
+.tools-popup-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 4px 8px 2px;
+}
+.tool-item-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 193, 7, 0.12);
+    color: var(--md-sys-color-on-surface);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    transition: background 0.2s ease, transform 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.tool-item-btn:hover { background: rgba(255, 193, 7, 0.25); }
+.tool-item-btn:active { transform: scale(0.97); }
+.tool-item-btn .material-symbols-rounded {
+    font-size: 20px;
+    color: var(--md-sys-color-primary);
+}
     </style>
 </head>
 <body>
@@ -542,12 +609,36 @@ body.dark-theme .icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
 <nav class="top-navbar">
     <!-- EDIT: Replace file.svg with your logo file path -->
     <img src="file.svg" alt="Logo" class="navbar-logo">
-    <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme">
-        <div class="theme-icon-wrap">
-            <span class="icon-sun">light_mode</span>
-            <span class="icon-moon">dark_mode</span>
+
+    <div style="display:flex; align-items:center; gap:8px;">
+
+        <!-- Tools Button -->
+        <div class="tools-wrapper">
+            <button class="theme-toggle-btn" id="tools-btn" title="Tools">
+                <div class="theme-icon-wrap">
+                    <span style="font-family:'Material Symbols Rounded';font-size:22px;color:var(--md-sys-color-primary);line-height:1;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">wand_stars</span>
+                </div>
+            </button>
+            
+            <!-- Tools Popup -->
+            <div class="tools-popup" id="tools-popup">
+                <div class="tools-popup-label">Magic Box</div>
+                <button class="tool-item-btn" id="open-img-compressor">
+                    <span class="material-symbols-rounded">photo</span>
+                    Image Crusher
+                </button>
+            </div>
         </div>
-    </button>
+
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme">
+            <div class="theme-icon-wrap">
+                <span class="icon-sun">light_mode</span>
+                <span class="icon-moon">dark_mode</span>
+            </div>
+        </button>
+
+    </div>
 </nav>
 	<!-- Live Bubble Animation -->
     <div class="bubbles-container" id="bubbles"></div>
@@ -849,6 +940,25 @@ body.dark-theme .icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
 
     <script>
 
+		// ===== TOOLS POPUP =====
+const toolsBtn   = document.getElementById('tools-btn');
+const toolsPopup = document.getElementById('tools-popup');
+
+toolsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toolsPopup.classList.toggle('open');
+});
+
+document.addEventListener('click', () => {
+    toolsPopup.classList.remove('open');
+});
+
+// ===== IMAGE COMPRESSOR =====
+document.getElementById('open-img-compressor').addEventListener('click', () => {
+    toolsPopup.classList.remove('open');
+    window.ImgCrusher.open();
+});
+
         // Hero Section Greetings
         const greetings = [
 				{ range: [5, 12],  text: "Good Morning" },
@@ -1080,6 +1190,6 @@ themeBtn.addEventListener('click', () => {
     });
 });
     </script>
+	<script src="Image Compressor.js"></script>
 </body>
 </html>
-
