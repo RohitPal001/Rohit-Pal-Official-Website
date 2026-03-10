@@ -141,8 +141,10 @@
 
     /* Settings */
     .ic-settings {
-      background: var(--ic-surface); border: 1px solid var(--ic-outline-var);
-      border-radius: 16px; padding: 18px;
+  background: var(--ic-surface); border: 1px solid var(--ic-outline-var);
+  border-radius: 16px; padding: 18px;
+  overflow: hidden;
+}
     }
     .ic-panel-title {
       font-family: var(--ic-font); font-size: .7rem; font-weight: 700;
@@ -204,7 +206,7 @@
     }
     #ic-resize-row.show { display: flex; }
     .ic-dim-input {
-      flex: 1; background: var(--ic-surface-high); border: 1px solid var(--ic-outline);
+      flex: 1; min-width: 0; background: var(--ic-surface-high); border: 1px solid var(--ic-outline);
       border-radius: 10px; padding: 7px 10px; font-family: var(--ic-font);
       font-size: .8rem; color: var(--ic-on-surface); outline: none; transition: border-color .2s;
     }
