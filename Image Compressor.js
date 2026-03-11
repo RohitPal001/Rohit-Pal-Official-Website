@@ -18,6 +18,12 @@
       --ic-error:        #FFB4AB;
       --ic-font:         'Outfit', sans-serif;
     }
+    
+    .ic-toggle-wrap, .ic-toggle-wrap * {
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none;
+}
 
     /* Trigger */
     .ic-trigger-btn {
@@ -187,7 +193,7 @@
 
     /* Toggle */
     .ic-toggle-row { display: flex; align-items: center; justify-content: space-between; }
-    .ic-toggle-wrap { position: relative; width: 44px; height: 26px; }
+    .ic-toggle-wrap { position: relative; width: 44px; height: 26px;}
     .ic-toggle-wrap input { opacity: 0; width: 0; height: 0; }
     .ic-track {
       position: absolute; inset: 0; background: var(--ic-outline);
@@ -332,17 +338,17 @@
     .ic-trigger-btn, .ic-close-btn, .ic-browse-btn,
     .ic-fmt-btn, .ic-slider, .ic-btn-primary,
     .ic-btn-secondary, .ic-btn-ghost, .ic-tab,
-    .ic-dim-input, .ic-toggle-wrap input {
+    .ic-dim-input, .ic-toggle-wrap input,
+    #ic-dropzone, #ic-resize-chk {
       -webkit-tap-highlight-color: transparent;
     }
-    .ic-trigger-btn:focus:not(:focus-visible),
-    .ic-close-btn:focus:not(:focus-visible),
-    .ic-browse-btn:focus:not(:focus-visible),
-    .ic-fmt-btn:focus:not(:focus-visible),
-    .ic-btn-primary:focus:not(:focus-visible),
-    .ic-btn-secondary:focus:not(:focus-visible),
-    .ic-btn-ghost:focus:not(:focus-visible),
-    .ic-tab:focus:not(:focus-visible) {
+    .ic-trigger-btn:focus, .ic-close-btn:focus,
+    .ic-browse-btn:focus, .ic-fmt-btn:focus,
+    .ic-btn-primary:focus, .ic-btn-secondary:focus,
+    .ic-btn-ghost:focus, .ic-tab:focus,
+    .ic-dim-input:focus, #ic-dropzone:focus,
+    #ic-resize-chk:focus,
+    .ic-toggle-wrap:focus-within .ic-track {
       outline: none;
       box-shadow: none;
     }
