@@ -599,13 +599,66 @@ body.dark-theme .tools-popup {
     font-size: 20px;
     color: var(--md-sys-color-primary);
 }
-		.project-cover {
-            width: 150px;
-            height: 150px;
-            background-color: var(--md-sys-color-primary-container);
-            border-radius: 30px;
-            object-fit: cover;
-        }
+		
+/* ===== PROJECT CARDS ===== */
+}
+.project-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.18);
+}
+.project-cover {
+    width: 95px;
+    height: 95px;
+    border-radius: 20px;
+    object-fit: cover;
+    background-color: var(--md-sys-color-primary-container);
+    flex-shrink: 0;
+}
+.project-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.project-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--md-sys-color-on-surface);
+    margin: 0;
+}
+.project-desc {
+    font-size: 0.93rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    line-height: 1.55;
+    margin: 0;
+}
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+}
+.project-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+}
+body.dark-theme .project-item {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 193, 7, 0.1);
+}
+@media (max-width: 480px) {
+    .project-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .project-tags { justify-content: center; }
+		}
     </style>
 </head>
 <body>
@@ -885,6 +938,25 @@ body.dark-theme .tools-popup {
                 <p><strong>Computer Centre:</strong> <a href="https://maps.app.goo.gl/ZHMWcusoDPyUZrqr6" target="_blank">Hi-Tech Computer Education Centre</a></p>
             </div>
         </div>
+
+<!-- Projects Box -->
+<div class="m3-card">
+    <h2><span class="icon">folder_code</span> My Projects</h2>
+
+    <!-- Project: Rowser -->
+    <div class="m3-card-sub">
+        <img src="rowser-logo.png" alt="Rowser Logo" class="project-cover">
+        <div class="project-info">
+            <div class="project-title">Rowser</div>
+            <p>A Browser app. I developed this app for Android with focus on privacy & features.</p>
+            <div class="project-tags">
+                <span class="project-tag">Browser App</span>
+                <span class="project-tag">Privacy & Features</span>
+            </div>
+        </div>
+    </div>
+
+</div> 
 
         <!-- Timeless Moments Box -->
         <div class="m3-card">
@@ -1201,5 +1273,3 @@ themeBtn.addEventListener('click', () => {
 	<script src="Image Compressor.js"></script>
 </body>
 </html>
-
-
