@@ -599,6 +599,13 @@ body.dark-theme .tools-popup {
     font-size: 20px;
     color: var(--md-sys-color-primary);
 }
+		.project-cover {
+            width: 150px;
+            height: 150px;
+            background-color: var(--md-sys-color-primary-container);
+            border-radius: 30px;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body>
@@ -878,6 +885,25 @@ body.dark-theme .tools-popup {
                 <p><strong>Computer Centre:</strong> <a href="https://maps.app.goo.gl/ZHMWcusoDPyUZrqr6" target="_blank">Hi-Tech Computer Education Centre</a></p>
             </div>
         </div>
+
+		<!-- Projects Box -->
+        <div class="m3-card">
+            <h2><span class="icon">folder_code</span> My Projects</h2>
+            <div class="m3-card-sub">
+            
+            <!-- Rowser -->
+                <p>
+               <strong>
+               <h2>Rowser</h2>
+				<img src="rowser-logo.png" class="project-cover">
+				<br><br>
+                This is a browser application.
+                <br>
+                I developed this app to focus on features & user privacy.
+                </p>
+
+            </div>
+		</div>
 
         <!-- Timeless Moments Box -->
         <div class="m3-card">
@@ -1194,3 +1220,4 @@ themeBtn.addEventListener('click', () => {
 	<script src="Image Compressor.js"></script>
 </body>
 </html>
+
