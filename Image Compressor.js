@@ -371,7 +371,7 @@
 
       <div class="ic-header">
         <div class="ic-logo">
-          <div class="ic-logo-text">Image Crusher<br><span>Developed By Rohit Pal</span></div>
+          <div class="ic-logo-text">Magical Image<br><span>Developed By Rohit Pal</span></div>
         </div>
         <button class="ic-close-btn" id="ic-close-btn" title="Close (Esc)">✕</button>
       </div>
@@ -433,7 +433,7 @@
                 <div class="ic-stat-row"><span>Saved</span><strong id="ic-s-save" class="ic-stat-saving">—</strong></div>
               </div>
 
-              <button class="ic-btn-primary" id="ic-crush-btn">Crush It!</button>
+              <button class="ic-btn-primary" id="ic-crush-btn">Magic!</button>
               <button class="ic-btn-secondary" id="ic-dl-btn">Download</button>
               <button class="ic-btn-ghost" id="ic-new-btn">+ New Image</button>
             </div>
@@ -445,7 +445,7 @@
                 <button class="ic-tab" data-tab="compare">Compare</button>
               </div>
               <div class="ic-preview-area">
-                <div id="ic-loading"><div class="ic-spinner"></div><span class="ic-spin-txt">Crushing…</span></div>
+                <div id="ic-loading"><div class="ic-spinner"></div><span class="ic-spin-txt">Doing Magic...</span></div>
                 <div id="ic-view-original" class="ic-view active"><img id="ic-orig-img" src="" alt="Original" /></div>
                 <div id="ic-view-compressed" class="ic-view"><img id="ic-comp-img" src="" alt="Compressed" /></div>
                 <div id="ic-view-compare" class="ic-view ic-compare">
