@@ -612,7 +612,7 @@
     const name = (ic_file.name || 'image').replace(/\.[^.]+$/, '');
     const a    = document.createElement('a');
     a.href     = URL.createObjectURL(ic_compBlob);
-    a.download = `${name}_crushed.${ext}`;
+    a.download = `${name}_magical_image.${ext}`;
     a.click();
   });
 
