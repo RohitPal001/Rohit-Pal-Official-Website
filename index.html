@@ -680,6 +680,50 @@ body.dark-theme .project-item {
 
     <div style="display:flex; align-items:center; gap:8px;">
 
+		<!-- Sections Nav Button -->
+        <div class="tools-wrapper" id="sections-wrapper">
+            <button class="theme-toggle-btn" id="sections-btn" title="Go To Section">
+                <div class="theme-icon-wrap">
+                    <span style="font-family:'Material Symbols Rounded';font-size:22px;color:var(--md-sys-color-primary);line-height:1;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">menu_open</span>
+                </div>
+            </button>
+
+            <!-- Sections Popup -->
+            <div class="tools-popup" id="sections-popup">
+                <div class="tools-popup-label">Sections</div>
+                <button class="tool-item-btn" onclick="goTo('sec-top')">
+                    <span class="material-symbols-rounded">person</span> Top
+                </button>
+                <button class="tool-item-btn" onclick="goTo('sec-address')">
+                    <span class="material-symbols-rounded">location_on</span> Address
+                </button>
+                <button class="tool-item-btn" onclick="goTo('sec-birthday')">
+                    <span class="material-symbols-rounded">cake</span> Birthday
+                </button>
+                <button class="tool-item-btn" onclick="goTo('sec-social')">
+                    <span class="material-symbols-rounded">connect_without_contact</span> I'm On
+                </button>
+                <button class="tool-item-btn" onclick="goTo('sec-favourites')">
+                    <span class="material-symbols-rounded">favorite</span> My Favourites
+                </button>
+                <button class="tool-item-btn" onclick="goTo('sec-education')">
+                    <span class="material-symbols-rounded">school</span> Education
+                </button>
+                <button class="tool-item-btn" onclick="goTo('sec-projects')">
+                    <span class="material-symbols-rounded">folder_code</span> My Projects
+                </button>
+                <button class="tool-item-btn" onclick="goTo('sec-gallery')">
+                    <span class="material-symbols-rounded">collections</span> Timeless Moments
+                </button>
+                <button class="tool-item-btn" onclick="goTo('sec-aka')">
+                    <span class="material-symbols-rounded">badge</span> Also Known As
+                </button>
+                <button class="tool-item-btn" onclick="goTo('sec-search')">
+                    <span class="material-symbols-rounded">search</span> Quick Search
+                </button>
+            </div>
+		</div>
+
         <!-- Tools Button -->
         <div class="tools-wrapper">
             <button class="theme-toggle-btn" id="tools-btn" title="Tools">
@@ -714,7 +758,7 @@ body.dark-theme .project-item {
     <div class="container">
         
         <!-- Header Box with Custom Background Integration -->
-        <div class="m3-card m3-card-tonal header-card-anim header-card-custom fade-in">
+        <div id="sec-top" class="m3-card m3-card-tonal header-card-anim header-card-custom fade-in">
             
             <!-- Live Date & Time View -->
             <div class="live-date-time">
@@ -753,7 +797,7 @@ body.dark-theme .project-item {
         </div>
 
         <!-- Address Box -->
-        <div class="m3-card">
+        <div id="sec-address" class="m3-card">
             <h2><span class="icon">location_on</span> Address</h2>
             
             <p><strong>Jiaganj - 742123, Murshidabad, West Bengal, India.</strong></p>
@@ -765,7 +809,7 @@ body.dark-theme .project-item {
         </div>
 
         <!-- Birthday Box -->
-        <div class="m3-card">
+        <div id="sec-birthday" class="m3-card">
             <h2><span class="icon">cake</span> Birthday</h2>
             <div class="m3-card-sub">
                 <p><strong>Birthday:</strong> 16th November, 2007</p>
@@ -775,7 +819,7 @@ body.dark-theme .project-item {
         </div>
 
         <!-- Socials Box -->
-        <div class="m3-card">
+        <div id="sec-social" class="m3-card">
             <h2><span class="icon">connect_without_contact</span> I'm On</h2>
             <div class="social-grid">
                 <!-- YouTube Button with M3 morphing logic -->
@@ -796,7 +840,7 @@ body.dark-theme .project-item {
         </div>
 
         <!-- My Favourites Box -->
-        <div class="m3-card">
+        <div id="sec-favourites" class="m3-card">
             <h2><span class="icon">favorite</span> My Favourites</h2>
             
             <!-- Sub Box: Music -->
@@ -937,7 +981,7 @@ body.dark-theme .project-item {
         </div>
 
         <!-- Education Box -->
-        <div class="m3-card">
+        <div id="sec-education" class="m3-card">
             <h2><span class="icon">school</span> Education</h2>
             <div class="m3-card-sub">
                 <p><strong>Primary School:</strong> <a href="https://maps.app.goo.gl/NBcYHdBvA5Dv28XC7" target="_blank">Sri Ramkrishna Sarada Vidyapith</a></p>
@@ -948,7 +992,7 @@ body.dark-theme .project-item {
         </div>
 
 <!-- Projects Box -->
-<div class="m3-card">
+<div id="sec-projects" class="m3-card">
     <h2><span class="icon">folder_code</span> My Projects</h2>
 
     <!-- Project: Rowser -->
@@ -967,7 +1011,7 @@ body.dark-theme .project-item {
 </div> 
 
         <!-- Timeless Moments Box -->
-        <div class="m3-card">
+        <div id="sec-gallery" class="m3-card">
             <h2><span class="icon">collections</span> Timeless Moments</h2>
             <div class="gallery-grid">
                 <a href="https://maps.app.goo.gl/dh7mVmGys78Z6sHu6" target="_blank">
@@ -1000,13 +1044,13 @@ body.dark-theme .project-item {
         </div>
 
         <!-- Also Known As Box -->
-        <div class="m3-card">
+        <div id="sec-aka" class="m3-card">
             <h2><span class="icon">badge</span> Also Known As</h2>
             <h1 style="color: var(--md-sys-color-primary); font-size: 2rem; margin-top: 0;">World Wide Data RHT</h1>
         </div>
 
         <!-- Search Box -->
-        <div class="m3-card">
+        <div id="sec-search" class="m3-card">
             <h2><span class="icon">search</span> Quick Search</h2>
             <p>Search anything on Google directly from here!</p>
             <!-- Native HTML form directly queries Google -->
@@ -1028,6 +1072,30 @@ body.dark-theme .project-item {
     </div>
 
     <script>
+
+		// ===== SECTIONS NAV POPUP =====
+const sectionsBtn   = document.getElementById('sections-btn');
+const sectionsPopup = document.getElementById('sections-popup');
+
+sectionsBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    // Close tools popup if open
+    toolsPopup.classList.remove('open');
+    sectionsPopup.classList.toggle('open');
+});
+
+document.addEventListener('click', () => {
+    sectionsPopup.classList.remove('open');
+});
+
+function goTo(id) {
+    sectionsPopup.classList.remove('open');
+    const el = document.getElementById(id);
+    if (!el) return;
+    const navbarH = document.querySelector('.top-navbar')?.offsetHeight || 0;
+    const top = el.getBoundingClientRect().top + window.scrollY - navbarH - 16;
+    window.scrollTo({ top, behavior: 'smooth' });
+}
 
 		// ===== TOOLS POPUP =====
 const toolsBtn   = document.getElementById('tools-btn');
