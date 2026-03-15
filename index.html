@@ -584,8 +584,15 @@ body.dark-theme .icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate
     background: transparent;
 }
 .tools-popup::-webkit-scrollbar-thumb {
-    background-color: var(--md-sys-color-primary);
+    background-color: transparent;
     border-radius: 9999px;
+    transition: background-color 0.3s ease;
+}
+.tools-popup.is-scrolling::-webkit-scrollbar-thumb {
+    background-color: var(--md-sys-color-primary);
+}
+.tools-popup-inner.is-scrolling::-webkit-scrollbar-thumb {
+    background-color: var(--md-sys-color-primary);
 }
 .tools-popup.open {
     opacity: 1;
@@ -1093,6 +1100,18 @@ body.dark-theme .project-item {
     </div>
 
     <script>
+
+		// ===== SCROLLBAR FADE ON SCROLL =====
+document.querySelectorAll('.tools-popup').forEach(el => {
+    let scrollTimer;
+    el.addEventListener('scroll', () => {
+        el.classList.add('is-scrolling');
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(() => {
+            el.classList.remove('is-scrolling');
+        }, 1000);
+    });
+});
 
 		// ===== SECTIONS NAV POPUP =====
 const sectionsBtn   = document.getElementById('sections-btn');
