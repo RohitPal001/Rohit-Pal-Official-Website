@@ -767,6 +767,10 @@ body.dark-theme .project-item {
                     <span class="material-symbols-rounded">photo</span>
                     Magical Image
                 </button>
+				<button class="tool-item-btn" id="open-chart-maker">
+                  <span class="material-symbols-rounded">auto_graph</span>
+                        Magical Chart
+				</button>
             </div>
         </div>
 
@@ -1155,6 +1159,11 @@ document.getElementById('open-img-compressor').addEventListener('click', () => {
     toolsPopup.classList.remove('open');
     window.ImgCrusher.open();
 });
+		// ===== MAGICAL CHART =====
+document.getElementById('open-chart-maker').addEventListener('click', () => {
+    toolsPopup.classList.remove('open');
+    window.ChartMaker.open();
+});
 
         // Hero Section Greetings
         const greetings = [
@@ -1388,5 +1397,6 @@ themeBtn.addEventListener('click', () => {
 });
     </script>
 	<script src="Image Compressor.js"></script>
+	<script src="Chart.js"></script>
 </body>
 </html>
