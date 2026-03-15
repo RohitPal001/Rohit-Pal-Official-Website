@@ -1,11 +1,3 @@
-/*!
- * chart.js — Magical Chart Generator
- * Self-injecting | No dependencies | Pure Canvas
- * Bar · Line · Pie · Donut | PNG Download
- * M3 Expressive Yellow Theme
- * Rohit Pal Official Website
- */
-
 (function () {
     if (window.ChartMaker) return;
 
@@ -298,6 +290,11 @@ body.dark-theme .cg-title { color: var(--md-sys-color-on-surface,#EAE1D4); }
 @media (min-width: 621px) and (max-width: 760px) {
     .cg-left { width: 280px; min-width: 280px; }
 }
+.ic-logo-text {
+  font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 800;
+  color: var(--md-sys-color-on-surface, #1E1B16); letter-spacing: -.02em;
+  line-height: 1.2;
+}
 `;
 
     /* ══════════════════════════════════════
@@ -315,7 +312,7 @@ body.dark-theme .cg-title { color: var(--md-sys-color-on-surface,#EAE1D4); }
       <div class="cg-header">
         <div class="cg-title">
           <span class="cg-title-icon material-symbols-rounded">donut_large</span>
-          Magical Chart
+          <div class="ic-logo-text">Magical Chart<br><span>Developed By Rohit Pal</span></div>
         </div>
         <button class="cg-close" id="cg-close">close</button>
       </div>
