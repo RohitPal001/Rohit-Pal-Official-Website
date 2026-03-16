@@ -1546,10 +1546,17 @@ document.querySelectorAll('.gallery-img').forEach((el, index) => {
 document.querySelectorAll('.gallery-reveal').forEach(el => {
     textObserver.observe(el);
 });
-		// ===== SOCIAL BUTTONS: REVEAL শেষে class সরাও =====
+		// ===== SOCIAL BUTTONS: REVEAL Class =====
 document.querySelectorAll('.social-grid a').forEach(el => {
     el.addEventListener('transitionend', () => {
         el.classList.remove('text-reveal');
+        el.style.transitionDelay = '';
+    }, { once: true });
+});
+		// ===== GALLERY: REVEAL Class =====
+document.querySelectorAll('.gallery-img').forEach(el => {
+    el.addEventListener('transitionend', () => {
+        el.classList.remove('gallery-reveal');
         el.style.transitionDelay = '';
     }, { once: true });
 });
