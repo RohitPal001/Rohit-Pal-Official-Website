@@ -1546,6 +1546,13 @@ document.querySelectorAll('.gallery-img').forEach((el, index) => {
 document.querySelectorAll('.gallery-reveal').forEach(el => {
     textObserver.observe(el);
 });
+		// ===== SOCIAL BUTTONS: REVEAL শেষে class সরাও =====
+document.querySelectorAll('.social-grid a').forEach(el => {
+    el.addEventListener('transitionend', () => {
+        el.classList.remove('text-reveal');
+        el.style.transitionDelay = '';
+    }, { once: true });
+});
     </script>
 	<script src="Image Compressor.js"></script>
 	<script src="Chart.js"></script>
