@@ -733,7 +733,7 @@ body.dark-theme .project-item {
     0%   { transform: translate(0, 0) scale(1); opacity: 1; }
     100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
 }
-		/* ===== PREMIUM TEXT REVEAL ANIMATION ===== */
+	/* ===== PREMIUM TEXT REVEAL ANIMATION ===== */
 .text-reveal {
     opacity: 0;
     transform: translateY(28px);
@@ -746,6 +746,17 @@ body.dark-theme .project-item {
     opacity: 1;
     transform: translateY(0);
     filter: blur(0);
+}
+/* Gallery images — filter reveal */
+.gallery-reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.gallery-reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
 }
     </style>
 </head>
@@ -1497,15 +1508,15 @@ toolsBtn.addEventListener('click', () => {
     triggerSparkle(toolsBtn);
 });
 		// ===== PREMIUM TEXT REVEAL ANIMATION =====
-const textSelectors = 'h1, h2, h3, p, li, .subtitle, .project-title, .project-desc, .project-tag, .weather-chip, .social-grid a, .music-item, .movie-cover, .gallery-img, footer p';
+const textSelectors = 'h1, h2, h3, p, li, .subtitle, .project-title, .project-desc, .project-tag, .weather-chip, .social-grid a, .music-item, .movie-cover, footer p, #sec-favourites .m3-btn';
 
 document.querySelectorAll(textSelectors).forEach((el, index) => {
-    // navbar এর ভেতরের element skip করো
+    // navbar element skip
     if (el.closest('.top-navbar')) return;
 
     el.classList.add('text-reveal');
 
-    // প্রতিটা card এর ভেতরে stagger delay
+    // card stagger delay
     const cardParent = el.closest('.m3-card');
     const siblings = cardParent
         ? [...cardParent.querySelectorAll(textSelectors)].filter(e => !e.closest('.top-navbar'))
@@ -1524,6 +1535,15 @@ const textObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 
 document.querySelectorAll('.text-reveal').forEach(el => {
+    textObserver.observe(el);
+});
+// Gallery images — staggered fade
+document.querySelectorAll('.gallery-img').forEach((el, index) => {
+    el.classList.add('gallery-reveal');
+    el.style.transitionDelay = `${index * 60}ms`;
+});
+
+document.querySelectorAll('.gallery-reveal').forEach(el => {
     textObserver.observe(el);
 });
     </script>
