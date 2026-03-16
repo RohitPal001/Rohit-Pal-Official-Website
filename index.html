@@ -695,6 +695,44 @@ body.dark-theme .project-item {
     }
     .project-tags { justify-content: center; }
 		}
+		   /* ===== BUTTON 1: SECTIONS MENU ICON ANIMATION ===== */
+#sections-btn .theme-icon-wrap span {
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+                color 0.3s ease;
+}
+#sections-btn.menu-open .theme-icon-wrap span {
+    transform: translate(-50%, -50%) rotate(180deg) scale(0.85) !important;
+}
+#sections-btn:hover .theme-icon-wrap span {
+    transform: translate(-50%, -50%) rotate(20deg) scale(1.1) !important;
+}
+#sections-btn.menu-open:hover .theme-icon-wrap span {
+    transform: translate(-50%, -50%) rotate(160deg) scale(1.1) !important;
+}
+
+/* ===== BUTTON 2: MAGIC WAND SPIN ON CLICK ===== */
+@keyframes wandSpin {
+    0%   { transform: translate(-50%, -50%) rotate(0deg)   scale(1);   }
+    35%  { transform: translate(-50%, -50%) rotate(210deg) scale(1.35); }
+    65%  { transform: translate(-50%, -50%) rotate(340deg) scale(0.88); }
+    100% { transform: translate(-50%, -50%) rotate(360deg) scale(1);   }
+}
+#tools-btn.wand-spin .theme-icon-wrap span {
+    animation: wandSpin 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* ===== SPARKLE PARTICLES ===== */
+.sparkle-particle {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkleFly 0.7s ease-out forwards;
+    z-index: 99999;
+}
+@keyframes sparkleFly {
+    0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
     </style>
 </head>
 <body>
@@ -1394,6 +1432,55 @@ themeBtn.addEventListener('click', () => {
             }, 680);
         });
     });
+});
+		// ===== BUTTON 1: MENU ICON ROTATE ON OPEN/CLOSE =====
+sectionsBtn.addEventListener('click', () => {
+    sectionsBtn.classList.toggle('menu-open', sectionsPopup.classList.contains('open'));
+});
+document.addEventListener('click', () => {
+    sectionsBtn.classList.remove('menu-open');
+});
+const _origGoTo = goTo;
+window.goTo = function(id) {
+    sectionsBtn.classList.remove('menu-open');
+    _origGoTo(id);
+};
+
+// ===== BUTTON 2: MAGIC WAND SPARKLE BURST ON CLICK =====
+function triggerSparkle(btn) {
+    const colors = ['#FFC107', '#FFD54F', '#ffffff', '#FFECB3', '#FFB300'];
+    const rect = btn.getBoundingClientRect();
+    const cx = rect.left + rect.width  / 2;
+    const cy = rect.top  + rect.height / 2;
+
+    for (let i = 0; i < 12; i++) {
+        const spark = document.createElement('div');
+        spark.classList.add('sparkle-particle');
+
+        const angle = (i / 12) * 360 + Math.random() * 15;
+        const dist  = 30 + Math.random() * 22;
+        const size  = 4 + Math.random() * 5;
+
+        spark.style.setProperty('--tx', `${Math.cos(angle * Math.PI / 180) * dist}px`);
+        spark.style.setProperty('--ty', `${Math.sin(angle * Math.PI / 180) * dist}px`);
+        spark.style.background     = colors[Math.floor(Math.random() * colors.length)];
+        spark.style.width          = `${size}px`;
+        spark.style.height         = `${size}px`;
+        spark.style.left           = `${cx - size / 2}px`;
+        spark.style.top            = `${cy - size / 2}px`;
+        spark.style.animationDelay = `${i * 18}ms`;
+
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 750);
+    }
+}
+
+toolsBtn.addEventListener('click', () => {
+    toolsBtn.classList.remove('wand-spin');
+    void toolsBtn.offsetWidth; // animation restart
+    toolsBtn.classList.add('wand-spin');
+    setTimeout(() => toolsBtn.classList.remove('wand-spin'), 700);
+    triggerSparkle(toolsBtn);
 });
     </script>
 	<script src="Image Compressor.js"></script>
