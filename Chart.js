@@ -367,7 +367,7 @@ body.dark-theme .cg-title { color: var(--md-sys-color-on-surface,#EAE1D4); }
         </div>
         <button class="cg-dl-btn" id="cg-dl-btn">
           <span class="material-symbols-rounded">download</span>
-          Download PNG
+          Download
         </button>
       </div>
 
