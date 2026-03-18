@@ -758,6 +758,37 @@ body.dark-theme .project-item {
     opacity: 1;
     transform: translateY(0);
 }
+		/* Idle Ghost Bear Overlay */
+#idle-bear-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 5, 20, 0.85);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease;
+  backdrop-filter: blur(4px);
+}
+
+#idle-bear-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+#idle-bear-overlay img {
+  width: min(420px, 85vw);
+  border-radius: 16px;
+  box-shadow: 0 0 60px #0033aaaa;
+  animation: bearPulse 3s ease-in-out infinite;
+}
+
+@keyframes bearPulse {
+  0%, 100% { box-shadow: 0 0 40px #001a6688; }
+  50%       { box-shadow: 0 0 80px #0055ffaa; }
+}
     </style>
 </head>
 <body>
@@ -1166,7 +1197,41 @@ body.dark-theme .project-item {
 
     </div>
 
+	<!-- Idle Bear Overlay -->
+<div id="idle-bear-overlay">
+  <img src="ghost.png" alt="You shouldn't have opened this.">
+</div>
+
     <script>
+
+		// Idle Bear - 20 second trigger
+(function () {
+  const overlay = document.getElementById('idle-bear-overlay');
+  let idleTimer = null;
+  const IDLE_TIME = 20000; // 20 seconds
+
+  function showBear() {
+    overlay.classList.add('visible');
+  }
+
+  function hideBear() {
+    overlay.classList.remove('visible');
+  }
+
+  function resetTimer() {
+    clearTimeout(idleTimer);
+    hideBear();
+    idleTimer = setTimeout(showBear, IDLE_TIME);
+  }
+
+  // Listen for any user activity
+  ['mousemove', 'keydown', 'scroll', 'touchstart', 'click'].forEach(evt => {
+    document.addEventListener(evt, resetTimer, { passive: true });
+  });
+
+  // Start the timer on page load
+  resetTimer();
+})();
 
 		// ===== SCROLLBAR FADE ON SCROLL =====
 document.querySelectorAll('.tools-popup').forEach(el => {
