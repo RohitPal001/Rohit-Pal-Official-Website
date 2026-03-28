@@ -1269,17 +1269,25 @@ document.querySelectorAll('.tools-popup').forEach(el => {
 		// ===== POPUP HELPERS =====
 function openPopup(popup) {
     popup.classList.remove('items-live');
+    popup.style.overflowY = 'hidden';
     const items = [...popup.querySelectorAll('.tools-popup-label, .tool-item-btn')];
     items.forEach((item, i) => { item.style.transitionDelay = `${i * 45}ms`; });
     popup.classList.add('open');
-    setTimeout(() => { popup.classList.add('items-live'); }, items.length * 45 + 400);
+    setTimeout(() => {
+        popup.classList.add('items-live');
+        popup.style.overflowY = '';
+    }, items.length * 45 + 400);
 }
 function closePopup(popup) {
     popup.classList.remove('items-live');
+    popup.style.overflowY = 'hidden';
     const items = [...popup.querySelectorAll('.tools-popup-label, .tool-item-btn')];
     items.forEach((item, i) => { item.style.transitionDelay = `${(items.length - 1 - i) * 28}ms`; });
     popup.classList.remove('open');
-    setTimeout(() => { items.forEach(item => { item.style.transitionDelay = ''; }); }, items.length * 28 + 420);
+    setTimeout(() => {
+        items.forEach(item => { item.style.transitionDelay = ''; });
+        popup.style.overflowY = '';
+    }, items.length * 28 + 420);
 }
 
 		// ===== SECTIONS NAV POPUP =====
