@@ -1268,25 +1268,30 @@ document.querySelectorAll('.tools-popup').forEach(el => {
 
 		// ===== POPUP HELPERS =====
 function openPopup(popup) {
+    if (popup._closeTimer) { clearTimeout(popup._closeTimer); popup._closeTimer = null; }
     popup.classList.remove('items-live');
     popup.style.overflowY = 'hidden';
     const items = [...popup.querySelectorAll('.tools-popup-label, .tool-item-btn')];
     items.forEach((item, i) => { item.style.transitionDelay = `${i * 45}ms`; });
     popup.classList.add('open');
-    setTimeout(() => {
+    popup._openTimer = setTimeout(() => {
         popup.classList.add('items-live');
         popup.style.overflowY = '';
+        popup._openTimer = null;
     }, items.length * 45 + 400);
 }
+
 function closePopup(popup) {
+    if (popup._openTimer) { clearTimeout(popup._openTimer); popup._openTimer = null; }
     popup.classList.remove('items-live');
     popup.style.overflowY = 'hidden';
     const items = [...popup.querySelectorAll('.tools-popup-label, .tool-item-btn')];
     items.forEach((item, i) => { item.style.transitionDelay = `${(items.length - 1 - i) * 28}ms`; });
     popup.classList.remove('open');
-    setTimeout(() => {
+    popup._closeTimer = setTimeout(() => {
         items.forEach(item => { item.style.transitionDelay = ''; });
         popup.style.overflowY = '';
+        popup._closeTimer = null;
     }, items.length * 28 + 420);
 }
 
