@@ -833,6 +833,13 @@ body.dark-theme .project-item {
     line-height: 1.6;
     margin: 0;
 }
+/* ===== PIXEL BURST EFFECT ===== */
+.pixel-burst {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    border-radius: 2px;
+}
     </style>
 </head>
 <body>
@@ -1747,6 +1754,66 @@ document.querySelectorAll('.gallery-img').forEach(el => {
     }
 
     setInterval(flipTile, 3500);
+})();
+		// ===== PIXEL BURST EFFECT =====
+(function () {
+    const skipSelector = 'button, a, input, textarea, select, label';
+    const colors = ['#FFC107','#FFD54F','#FFB300','#FFECB3','#ffffff','#FFE082'];
+
+    function burst(x, y) {
+        const count = 10 + Math.floor(Math.random() * 6);
+
+        for (let i = 0; i < count; i++) {
+            const px = document.createElement('div');
+            px.className = 'pixel-burst';
+
+            const size = 4 + Math.floor(Math.random() * 7);
+            px.style.width    = size + 'px';
+            px.style.height   = size + 'px';
+            px.style.left     = (x - size / 2) + 'px';
+            px.style.top      = (y - size / 2) + 'px';
+            px.style.background = colors[Math.floor(Math.random() * colors.length)];
+            px.style.opacity  = '1';
+            document.body.appendChild(px);
+
+            const angle  = Math.random() * Math.PI * 2;
+            const speed  = 2.5 + Math.random() * 6;
+            const vx     = Math.cos(angle) * speed;
+            const vy     = Math.sin(angle) * speed;
+            const rotate = Math.random() * 360;
+            const frames = 35 + Math.floor(Math.random() * 25);
+
+            let cx = x, cy = y, f = 0, r = rotate;
+
+            (function anim() {
+                f++;
+                cx += vx * (1 - f / frames);
+                cy += vy * (1 - f / frames) + f * 0.08;
+                r  += 4;
+                const progress = f / frames;
+                px.style.left      = (cx - size / 2) + 'px';
+                px.style.top       = (cy - size / 2) + 'px';
+                px.style.transform = `rotate(${r}deg) scale(${1 - progress * 0.6})`;
+                px.style.opacity   = (1 - progress).toFixed(2);
+                if (f < frames) requestAnimationFrame(anim);
+                else px.remove();
+            })();
+        }
+    }
+
+    let startX = 0, startY = 0;
+
+    document.addEventListener('pointerdown', (e) => {
+        startX = e.clientX;
+        startY = e.clientY;
+    });
+
+    document.addEventListener('pointerup', (e) => {
+        if (e.target.closest(skipSelector)) return;
+        const dx = Math.abs(e.clientX - startX);
+        const dy = Math.abs(e.clientY - startY);
+        if (dx < 8 && dy < 8) burst(e.clientX, e.clientY);
+    });
 })();
     </script>
 	<script src="Image Compressor.js"></script>
