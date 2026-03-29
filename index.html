@@ -816,6 +816,23 @@ body.dark-theme .project-item {
     background: rgba(255, 193, 7, 0.35) !important;
     transition: transform 0.08s ease !important;
 }
+/* ===== LIVE TILE TEXT FLIPPER ===== */
+.tile-flipper-wrap {
+    overflow: hidden;
+    height: 1.6em;
+    margin-top: 2px;
+}
+.tile-flipper-inner {
+    will-change: transform, opacity;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+}
+.tile-flipper-inner h6 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.6;
+    margin: 0;
+}
     </style>
 </head>
 <body>
@@ -946,7 +963,16 @@ body.dark-theme .project-item {
             
             <h1> <font color="white"> Rohit Pal </font> </h1>
             <div class="subtitle">Technology Enthusiast</div>
-            <div class="subtitle"><h6> <font color="#FFB300">Logic Behind The Scenes</font></h6></div>
+			
+            <!-- Live Tile Text Flipper -->
+               <div class="tile-flipper-wrap text-reveal">
+                   <div class="tile-flipper-inner" id="tile-flipper">
+                      <h6><font color="#FFB300" id="tile-text">
+                        Welcome!
+                    </font></h6>
+                </div>
+            </div>
+			
         </div>
 
         <!-- Address Box -->
@@ -1693,6 +1719,35 @@ document.querySelectorAll('.gallery-img').forEach(el => {
         el.style.transitionDelay = '';
     }, { once: true });
 });
+		
+// ===== LIVE TILE TEXT FLIPPER =====
+(function() {
+    const texts = ['Logic Behind The Scenes', 'Bio Website', 'Rohit Pal Official Website'];
+    const inner = document.getElementById('tile-flipper');
+    const label = document.getElementById('tile-text');
+    let idx = 0;
+
+    function flipTile() {
+        inner.style.transform = 'translateY(-110%)';
+        inner.style.opacity   = '0';
+
+        setTimeout(() => {
+            idx = (idx + 1) % texts.length;
+            label.textContent = texts[idx];
+            inner.style.transition = 'none';
+            inner.style.transform  = 'translateY(110%)';
+            inner.style.opacity    = '0';
+
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                inner.style.transition = 'transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease';
+                inner.style.transform  = 'translateY(0)';
+                inner.style.opacity    = '1';
+            }));
+        }, 450);
+    }
+
+    setInterval(flipTile, 3500);
+})();
     </script>
 	<script src="Image Compressor.js"></script>
 	<script src="Chart.js"></script>
