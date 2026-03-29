@@ -758,8 +758,9 @@ body.dark-theme .project-item {
     opacity: 1;
     transform: translateY(0);
 }
-		/* Idle Ghost Bear Overlay */
-#idle-bear-overlay {
+		
+/* Idle Screensaver Overlay */
+#idle-screensaver-overlay {
   position: fixed;
   inset: 0;
   z-index: 999999;
@@ -772,23 +773,17 @@ body.dark-theme .project-item {
   transition: opacity 1.5s ease;
 }
 
-#idle-bear-overlay.visible {
+#idle-screensaver-overlay.visible {
   opacity: 1;
   pointer-events: all;
 }
 
-#idle-bear-overlay img {
+#idle-screensaver-overlay img {
   width: min(420px, 85vw);
   border-radius: 16px;
-  box-shadow: 0 0 60px #0033aaaa;
-  animation: bearPulse 3s ease-in-out infinite;
 }
-
-@keyframes bearPulse {
-  0%, 100% { box-shadow: 0 0 40px #001a6688; }
-  50%       { box-shadow: 0 0 80px #0055ffaa; }
-}
-		/* ===== POPUP ITEMS: BLUR REVEAL ANIMATION ===== */
+		
+/* ===== POPUP ITEMS: BLUR REVEAL ANIMATION ===== */
 .tools-popup .tool-item-btn,
 .tools-popup .tools-popup-label {
     opacity: 0;
@@ -810,6 +805,7 @@ body.dark-theme .project-item {
     transition: background 0.2s ease, transform 0.15s ease !important;
     transition-delay: 0ms !important;
 }
+		
 		/* ===== RESTORE PRESS EFFECT ON POPUP ITEMS ===== */
 .tools-popup.open .tool-item-btn:hover {
     background: rgba(255, 193, 7, 0.25) !important;
@@ -1238,31 +1234,28 @@ body.dark-theme .project-item {
 
     </div>
 
-	<!-- Idle Bear Overlay -->
-<div id="idle-bear-overlay">
-  <img src="ghost.png" alt="You shouldn't have opened this.">
+<!-- Idle Screensaver Overlay -->
+<div id="idle-screensaver-overlay">
+  <img src="scsa.gif" alt="Screensaver">
 </div>
 
     <script>
 
-		// Idle Bear - 20 second trigger
+// Idle Screensaver - 30 second trigger
 (function () {
-  const overlay = document.getElementById('idle-bear-overlay');
+  const overlay = document.getElementById('idle-screensaver-overlay');
   let idleTimer = null;
-  const IDLE_TIME = 20000; // 20 seconds
-
-  function showBear() {
+  const IDLE_TIME = 30000; // 30 seconds
+  function showscreensaver() {
     overlay.classList.add('visible');
   }
-
-  function hideBear() {
+  function hidescreensaver() {
     overlay.classList.remove('visible');
   }
-
   function resetTimer() {
     clearTimeout(idleTimer);
-    hideBear();
-    idleTimer = setTimeout(showBear, IDLE_TIME);
+    hidescreensaver();
+    idleTimer = setTimeout(showscreensaver, IDLE_TIME);
   }
 
   // Listen for any user activity
