@@ -840,6 +840,43 @@ body.dark-theme .project-item {
     z-index: 9999;
     border-radius: 2px;
 }
+/* ===== Local Guide CSS ===== */
+.lg-stat-card {
+    background-color: var(--md-sys-color-primary);
+    border-radius: var(--m3-shape-medium);
+    padding: 24px 12px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s ease;
+    overflow: hidden;
+    min-width: 0;
+}
+.lg-stat-card.text-reveal {
+    transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                filter 0.7s ease-out !important;
+}
+.lg-stat-card:active { transform: scale(0.95); }
+.lg-stat-card .icon {
+    font-size: 32px;
+    color: var(--md-sys-color-on-primary);
+}
+.lg-stat-num {
+    font-size: clamp(0.9rem, 4vw, 1.5rem);
+    font-weight: 800;
+    color: var(--md-sys-color-on-primary);
+    word-break: break-all;
+    width: 100%;
+}
+.lg-stat-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-primary);
+    opacity: 0.8;
+}
     </style>
 </head>
 <body>
@@ -1241,6 +1278,38 @@ body.dark-theme .project-item {
                         <span class="project-tag">Google Maps</span>
                         <span class="project-tag">Local Guide Level 10</span>
                     </div>
+                </div>
+            </div>
+            <div id="lg-stats-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:16px;">
+                <div class="lg-stat-card">
+                    <span class="icon">visibility</span>
+                    <div class="lg-stat-num" id="stat-views">0</div>
+                    <div class="lg-stat-label">Views</div>
+                </div>
+                <div class="lg-stat-card">
+                    <span class="icon">edit_note</span>
+                    <div class="lg-stat-num" id="stat-contributions">0</div>
+                    <div class="lg-stat-label">Contributions</div>
+                </div>
+                <div class="lg-stat-card">
+                    <span class="icon">stars</span>
+                    <div class="lg-stat-num" id="stat-points">0</div>
+                    <div class="lg-stat-label">Points</div>
+                </div>
+                <div class="lg-stat-card">
+                    <span class="icon">photo_camera</span>
+                    <div class="lg-stat-num" id="stat-photos">0</div>
+                    <div class="lg-stat-label">Photos</div>
+                </div>
+                <div class="lg-stat-card">
+                    <span class="icon">videocam</span>
+                    <div class="lg-stat-num" id="stat-videos">0</div>
+                    <div class="lg-stat-label">Videos</div>
+                </div>
+                <div class="lg-stat-card">
+                    <span class="icon">location_on</span>
+                    <div class="lg-stat-num" id="stat-places">0</div>
+                    <div class="lg-stat-label">Places Covered</div>
                 </div>
             </div>
         </div>
@@ -1674,7 +1743,7 @@ toolsBtn.addEventListener('click', () => {
     triggerSparkle(toolsBtn);
 });
 		// ===== PREMIUM TEXT REVEAL ANIMATION =====
-const textSelectors = 'h1, h2, h3, p, li, .subtitle, .project-title, .project-desc, .project-tag, .weather-chip, .social-grid a, .music-item, .movie-cover, footer p, #sec-favourites .m3-btn';
+const textSelectors = 'h1, h2, h3, p, li, .subtitle, .project-title, .project-desc, .project-tag, .weather-chip, .social-grid a, .music-item, .movie-cover, footer p, #sec-favourites .m3-btn, .lg-stat-card';
 
 document.querySelectorAll(textSelectors).forEach((el, index) => {
     // navbar element skip
@@ -1814,6 +1883,57 @@ document.querySelectorAll('.gallery-img').forEach(el => {
         const dy = Math.abs(e.clientY - startY);
         if (dx < 8 && dy < 8) burst(e.clientX, e.clientY);
     });
+})();
+// ===== LOCAL GUIDE STATS COUNTER =====
+(function () {
+    function formatNum(n) {
+    return n.toLocaleString('en-IN') + '+';
+}
+
+    function animateCount(el, target, duration = 2000) {
+        let start = null;
+        function step(ts) {
+            if (!start) start = ts;
+            const progress = Math.min((ts - start) / duration, 1);
+            // Ease out cubic
+            const ease = 1 - Math.pow(1 - progress, 3);
+            el.textContent = formatNum(Math.floor(ease * target));
+            if (progress < 1) requestAnimationFrame(step);
+            else el.textContent = formatNum(target);
+        }
+        requestAnimationFrame(step);
+    }
+
+    fetch('stats.json')
+        .then(r => r.json())
+        .then(data => {
+            const map = {
+                views: 'stat-views',
+                contributions: 'stat-contributions',
+                points: 'stat-points',
+                photos: 'stat-photos',
+                videos: 'stat-videos',
+                places: 'stat-places'
+            };
+
+            // Trigger animation when card scrolls into view
+            const grid = document.getElementById('lg-stats-grid');
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    Object.entries(map).forEach(([key, id], i) => {
+                        setTimeout(() => {
+                            const el = document.getElementById(id);
+                            if (el && data[key] !== undefined) animateCount(el, data[key]);
+                        }, i * 150); // stagger each card
+                    });
+                    observer.disconnect();
+                }
+            }, { threshold: 0.3 });
+            observer.observe(grid);
+        })
+        .catch(() => {
+            document.getElementById('lg-stats-grid').style.display = 'none';
+        });
 })();
     </script>
 	<script src="Image Compressor.js"></script>
