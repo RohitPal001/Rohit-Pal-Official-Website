@@ -877,6 +877,24 @@ body.dark-theme .project-item {
     color: var(--md-sys-color-on-primary);
     opacity: 0.8;
 }
+	/* ===== GLITCH EFFECT ===== */
+@keyframes glitch {
+    0%   { text-shadow: none; transform: translate(0); }
+    10%  { text-shadow: -3px 0 #ff00c8, 3px 0 #00fff9; transform: translate(-2px, 1px); }
+    20%  { text-shadow: 3px 0 #ff00c8, -3px 0 #00fff9; transform: translate(2px, -1px); }
+    30%  { text-shadow: -2px 0 #ff00c8, 2px 0 #00fff9; transform: translate(0); }
+    40%  { text-shadow: 2px 0 #ff00c8, -2px 0 #00fff9; transform: translate(1px, 2px); clip-path: inset(20% 0 50% 0); }
+    50%  { text-shadow: none; transform: translate(0); clip-path: none; }
+    60%  { text-shadow: -3px 0 #ff00c8, 3px 0 #00fff9; transform: translate(-1px, -2px); }
+    70%  { text-shadow: 3px 0 #ff00c8; transform: translate(2px, 1px); clip-path: inset(60% 0 10% 0); }
+    80%  { text-shadow: none; transform: translate(0); clip-path: none; }
+    90%  { text-shadow: -2px 0 #00fff9; transform: translate(-1px, 0); }
+    100% { text-shadow: none; transform: translate(0); }
+}
+
+.glitch-once {
+    animation: glitch 0.6s steps(1) forwards;
+}
     </style>
 </head>
 <body>
@@ -1005,8 +1023,8 @@ body.dark-theme .project-item {
                 <img src="dp.jpg" alt="Profile Photo Of Rohit Pal" id="profile-photo">
             </div>
             
-            <h1> <font color="white"> Rohit Pal </font> </h1>
-            <div class="subtitle">Technology Enthusiast</div>
+            <h1> <font color="white"><span id="decrypt-name">Rohit Pal</span></font> </h1>
+            <div class="subtitle" id="decrypt-title">Technology Enthusiast</div>
 			
             <!-- Live Tile Text Flipper -->
                <div class="tile-flipper-wrap text-reveal">
@@ -1934,6 +1952,76 @@ document.querySelectorAll('.gallery-img').forEach(el => {
         .catch(() => {
             document.getElementById('lg-stats-grid').style.display = 'none';
         });
+})();
+// ===== DECRYPTION TEXT EFFECT =====
+(function () {
+    const glyphs = '!@#$%^&*<>?/|\\~[]{}ΔΩΨΦλμ∑∫αβγδŦĦŊŁŠŽʤʦʃʒ█▓▒░▄▀■□01';
+
+    function rndChar() {
+        return glyphs[Math.floor(Math.random() * glyphs.length)];
+    }
+
+    function scramble(text) {
+        return text.split('').map(c => c === ' ' ? ' ' : rndChar()).join('');
+    }
+
+    function decryptText(el, finalText, holdMs, revealMs) {
+        // Phase 1: Show scrambled text immediately & keep re-randomising
+        el.textContent = scramble(finalText);
+        const scrambleTick = setInterval(() => {
+            el.textContent = scramble(finalText);
+        }, 75);
+
+        // Phase 2: After holdMs, start revealing chars one-by-one in random order
+        setTimeout(() => {
+            clearInterval(scrambleTick);
+
+            const arr = finalText.split('');
+            const revealed = new Array(arr.length).fill(false);
+
+            // Keep scrambling unrevealed chars
+            const revealTick = setInterval(() => {
+                el.textContent = arr.map((c, i) => {
+                    if (c === ' ') return ' ';
+                    return revealed[i] ? c : rndChar();
+                }).join('');
+            }, 45);
+
+            // Shuffle the non-space indices for random reveal order
+            const indices = arr
+                .map((c, i) => ({ c, i }))
+                .filter(x => x.c !== ' ')
+                .sort(() => Math.random() - 0.5);
+
+            const delay = revealMs / indices.length;
+
+            indices.forEach((item, pos) => {
+                setTimeout(() => {
+                    revealed[item.i] = true;
+                    // Last char: stop ticker, lock final text
+                    if (pos === indices.length - 1) {
+                        clearInterval(revealTick);
+                        el.textContent = finalText;
+                        // Trigger glitch after text fully forms
+                        setTimeout(() => {
+                            el.classList.add('glitch-once');
+                            el.addEventListener('animationend', () => {
+                                el.classList.remove('glitch-once');
+                            }, { once: true });
+                        }, 100);
+                    }
+                }, pos * delay);
+            });
+
+        }, holdMs);
+    }
+
+    // Run on page load — each reload gives a fresh random scramble
+    const nameEl  = document.getElementById('decrypt-name');
+    const titleEl = document.getElementById('decrypt-title');
+
+    if (nameEl)  decryptText(nameEl,  'Rohit Pal',              1500, 2000);
+    if (titleEl) decryptText(titleEl, 'Technology Enthusiast',  1500, 2500);
 })();
     </script>
 	<script src="Image Compressor.js"></script>
