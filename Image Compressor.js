@@ -2,8 +2,7 @@
   'use strict';
 
   /* ══════════════════════════════════════
-     CSS  —  M3 Expressive Yellow Theme
-     Matches Magical Chart design language
+     CSS  —  M3 Expressive
   ══════════════════════════════════════ */
   const css = `
 /* ── Focus / tap reset ── */
