@@ -921,6 +921,18 @@ body.dark-theme .project-item {
     opacity: 0;
     transition: opacity 1.2s ease;
 }
+	/* Weather Strip Tap Effect */
+#weather-strip {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    user-select: none;
+}
+.weather-chip {
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
     </style>
 </head>
 <body>
@@ -1567,6 +1579,7 @@ document.getElementById('open-chart-maker').addEventListener('click', () => {
             document.getElementById('wb-temp').textContent = `${Math.round(c.temperature_2m)}°C`;
             document.getElementById('wb-desc').textContent = desc;
 			if (window.startWeatherScene) window.startWeatherScene(c.weathercode);
+			document.getElementById('weather-strip').dataset.code = c.weathercode;
         } catch {
             document.getElementById('wb-desc').textContent = 'Unavailable';
         }
@@ -1578,6 +1591,31 @@ document.getElementById('open-chart-maker').addEventListener('click', () => {
     }
 
     loadGreeting();
+
+	// ===== WEATHER STRIP TAP =====
+(function () {
+    const strip = document.getElementById('weather-strip');
+    if (!strip) return;
+
+    strip.addEventListener('pointerdown', () => {
+        strip.style.transition = 'transform 0.12s ease';
+        strip.style.transform  = 'scale(0.88)';
+    });
+
+    strip.addEventListener('pointerup', () => {
+        strip.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        strip.style.transform  = 'scale(1)';
+
+        const code = window._lastWeatherCode ?? parseInt(strip.dataset.code);
+        if (window.startWeatherScene && !isNaN(code))
+            window.startWeatherScene(code);
+    });
+
+    strip.addEventListener('pointercancel', () => {
+        strip.style.transition = 'transform 0.3s ease';
+        strip.style.transform  = 'scale(1)';
+    });
+})();
         
         // ===== PREMIUM FADE ANIMATION WITH INTERSECTION OBSERVER =====
         // This detects when cards enter the viewport and triggers the fade-in animation
