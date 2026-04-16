@@ -1597,14 +1597,21 @@ document.getElementById('open-chart-maker').addEventListener('click', () => {
     const strip = document.getElementById('weather-strip');
     if (!strip) return;
 
-    strip.addEventListener('pointerdown', () => {
-        strip.style.transition = 'transform 0.12s ease';
-        strip.style.transform  = 'scale(0.88)';
+    let tappedChip = null;
+
+    strip.addEventListener('pointerdown', (e) => {
+        tappedChip = e.target.closest('.weather-chip');
+        if (!tappedChip) return;
+        tappedChip.style.transition = 'transform 0.12s ease';
+        tappedChip.style.transform  = 'scale(0.88)';
     });
 
     strip.addEventListener('pointerup', () => {
-        strip.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        strip.style.transform  = 'scale(1)';
+        if (tappedChip) {
+            tappedChip.style.transition = 'transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            tappedChip.style.transform  = 'scale(1)';
+            tappedChip = null;
+        }
 
         const code = window._lastWeatherCode ?? parseInt(strip.dataset.code);
         if (window.startWeatherScene && !isNaN(code))
@@ -1612,8 +1619,11 @@ document.getElementById('open-chart-maker').addEventListener('click', () => {
     });
 
     strip.addEventListener('pointercancel', () => {
-        strip.style.transition = 'transform 0.3s ease';
-        strip.style.transform  = 'scale(1)';
+        if (tappedChip) {
+            tappedChip.style.transition = 'transform 0.3s ease';
+            tappedChip.style.transform  = 'scale(1)';
+            tappedChip = null;
+        }
     });
 })();
         
