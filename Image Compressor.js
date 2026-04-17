@@ -48,15 +48,33 @@
 }
 .ic-logo { display: flex; align-items: center; gap: 10px; }
 .ic-logo-icon {
-  width: 34px; height: 34px;
-  background: var(--md-sys-color-primary, #FFC107);
-  border-radius: 12px; display: flex; align-items: center; justify-content: center;
-  font-size: 17px; box-shadow: 0 0 14px rgba(255,193,7,.4);
-  animation: ic-pulse 3s ease-in-out infinite;
+  width: 38px; height: 38px;
+  background: transparent;        /* ← yellow box gone */
+  border-radius: 0;               /* ← no box shape */
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: visible; flex-shrink: 0;
 }
-@keyframes ic-pulse {
-  0%,100% { box-shadow: 0 0 14px rgba(255,193,7,.35); }
-  50%      { box-shadow: 0 0 28px rgba(255,193,7,.65); }
+.ic-logo-icon::before {
+  content: '';
+  position: absolute; inset: -3px;
+  border-radius: 15px;
+  background: conic-gradient(from 0deg,
+    transparent 0%, transparent 50%,
+    rgba(255,230,80,0.95) 72%, white 85%,
+    transparent 100%);
+  animation: ic-magic-ring 1.6s linear infinite;
+  z-index: -1;
+}
+@keyframes ic-magic-ring { to { transform: rotate(360deg); } }
+.ic-logo-icon .material-symbols-rounded {
+  font-size: 22px; line-height: 1;
+  color: var(--md-sys-color-primary, #FFC107);
+  font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+  animation: ic-wand-twinkle 2.4s ease-in-out infinite;
+}
+@keyframes ic-wand-twinkle {
+  0%,100% { transform: rotate(-8deg) scale(1);    filter: brightness(0.85); }
+  50%     { transform: rotate(8deg)  scale(1.18); filter: brightness(1.25) drop-shadow(0 0 6px rgba(255,220,40,1)); }
 }
 .ic-logo-text {
   font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 800;
@@ -480,7 +498,7 @@ body.dark-theme .ic-chip {
 
       <div class="ic-header">
         <div class="ic-logo">
-          <div class="ic-logo-icon">🪄</div>
+          <div class="ic-logo-icon"><span class="material-symbols-rounded">wand_stars</span></div>
           <div class="ic-logo-text">Magical Image<br><span>Developed By Rohit Pal</span></div>
         </div>
         <button class="ic-close-btn" id="ic-close-btn" title="Close (Esc)">✕</button>
@@ -587,7 +605,7 @@ body.dark-theme .ic-chip {
   document.body.appendChild(wrapper);
 
   /* ══════════════════════════════════════
-     JS  —  100% original, unchanged
+     JS  —  Core Architecture
   ══════════════════════════════════════ */
   const $ = id => document.getElementById(id);
   const fmtBytes = b => b < 1024 ? b + ' B' : b < 1048576 ? (b / 1024).toFixed(1) + ' KB' : (b / 1048576).toFixed(2) + ' MB';
