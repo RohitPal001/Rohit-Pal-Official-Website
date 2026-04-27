@@ -1756,12 +1756,18 @@ document.getElementById('open-chart-maker').addEventListener('click', () => {
         setInterval(calculateDates, 60000);
 
 		// ===== THEME TOGGLE WITH LIQUID ANIMATION =====
+		function updateThemeColor(isDark) {
+    document.querySelector('meta[name="theme-color"]')
+        .setAttribute("content", isDark ? "#FFD600" : "#7A6200");
+		}
 const themeBtn = document.getElementById('theme-toggle-btn');
 const overlay  = document.getElementById('theme-overlay');
 
 if (localStorage.getItem('theme') === 'dark') {
     document.body.classList.add('dark-theme');
 }
+		
+		updateThemeColor(localStorage.getItem('theme') === 'dark');
 
 themeBtn.addEventListener('click', () => {
     const isDark = document.body.classList.contains('dark-theme');
@@ -1786,6 +1792,7 @@ themeBtn.addEventListener('click', () => {
             setTimeout(() => {
                 document.body.classList.toggle('dark-theme');
                 localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+				updateThemeColor(document.body.classList.contains('dark-theme'));
             }, 300);
 
             setTimeout(() => {
