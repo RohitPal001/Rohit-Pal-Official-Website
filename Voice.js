@@ -165,7 +165,7 @@
         }
 
         // TOP / HOME
-        if (['goto top', 'go to top', 'website top', 'hero section', 'hero area', 'goto home', 'go to home', 'go home']
+        if (['goto top', 'go to top', 'website top', 'hero section', 'hero area', 'goto home', 'go to home', 'go home', 'time', 'date', 'date and time', 'time and date', 'date & time', 'time & date', 'show me time', 'show me date', 'show me time and date', 'show me date & time', 'show time', 'show date', 'show temperature', 'show me temperature', 'show me current temperature', 'show current temperature']
             .some(p => t.includes(p)) || t === 'top' || t === 'home') {
             voiceGoTo('sec-top'); return;
         }
