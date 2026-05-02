@@ -1,110 +1,148 @@
+// ============================================================
+//  VOICE COMMAND ENGINE — Voice.js
+//  Rohit Pal Official Website
+// ============================================================
+
 (function () {
-	
-	let started = false;
-document.addEventListener('touchstart', () => {
-    if (!started) {
-        started = true;
-        recognition.start();
-    }
-}, { once: false });
-	
-	function showToast(msg) {
-    const t = document.createElement('div');
-    t.textContent = msg;
-    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#FFC107;color:#000;padding:10px 20px;border-radius:999px;font-weight:700;z-index:99999;font-size:14px;';
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 3000);
-}
 
-    // ── Browser support check ─────────────────────────────
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) return; // Silently exit if not supported
+    if (!SpeechRecognition) return;
 
-    const recognition = new SpeechRecognition();
-    recognition.continuous     = true;  // Always listening
-    recognition.interimResults = false; // Only fire on final results
-    recognition.lang           = 'en-US';
+    // ── Toast (debug) ─────────────────────────────────────
+    function showToast(msg) {
+        const t = document.createElement('div');
+        t.textContent = msg;
+        t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#FFC107;color:#000;padding:10px 20px;border-radius:999px;font-weight:700;z-index:99999;font-size:14px;white-space:nowrap;';
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    // ── Recognition setup ─────────────────────────────────
+    let recognition = null;
+    let running = false;
+
+    function createRecognition() {
+        const r = new SpeechRecognition();
+        r.continuous     = true;
+        r.interimResults = false;
+        r.lang           = 'en-US';
+
+        r.onstart  = () => { running = true; };
+        r.onend    = () => {
+            running = false;
+            setTimeout(startRecognition, 300);
+        };
+        r.onerror  = (e) => {
+            running = false;
+            if (e.error === 'not-allowed' || e.error === 'service-not-allowed') return;
+            setTimeout(startRecognition, 500);
+        };
+        r.onresult = (event) => {
+            const t = event.results[event.results.length - 1][0].transcript
+                        .toLowerCase().trim();
+            showToast('🎤 ' + t);
+            handleCommand(t);
+        };
+        return r;
+    }
+
+    function startRecognition() {
+        if (running) return;
+        try {
+            if (!recognition) recognition = createRecognition();
+            recognition.start();
+        } catch (e) {
+            running = false;
+        }
+    }
+
+    // ── Hold mic stream so green dot stays on ─────────────
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => { window._voiceMicStream = stream; })
+        .catch(() => {});
+
+    // ── Start on first user touch (mobile requirement) ────
+    let touched = false;
+    document.addEventListener('touchstart', function onFirst() {
+        if (touched) return;
+        touched = true;
+        startRecognition();
+    }, { passive: true });
+
+    // Also start on desktop click
+    document.addEventListener('click', function onFirstClick() {
+        if (touched) return;
+        touched = true;
+        startRecognition();
+    }, { once: true });
 
 
-    // ── THEME TOGGLE (with existing Liquid animation) ──────
+    // ── THEME TOGGLE ──────────────────────────────────────
     function triggerTheme(forceDark) {
         const isDark = document.body.classList.contains('dark-theme');
-        if (forceDark === isDark) return; // Already in correct mode
+        if (forceDark === isDark) return;
 
         const overlay = document.getElementById('theme-overlay');
-        const ox = '50%', oy = '50%'; // Centre-screen origin for voice
+        if (!overlay) return;
 
-        overlay.style.setProperty('--ox', ox);
-        overlay.style.setProperty('--oy', oy);
-        overlay.style.background = isDark ? '#FFFAF0' : '#121008';
+        const ox = '50%', oy = '50%';
+        overlay.style.background  = isDark ? '#FFFAF0' : '#121008';
         overlay.classList.remove('expanding');
-        overlay.style.transition = 'none';
-        overlay.style.clipPath   = `circle(0% at ${ox} ${oy})`;
+        overlay.style.transition  = 'none';
+        overlay.style.clipPath    = `circle(0% at ${ox} ${oy})`;
 
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                overlay.classList.add('expanding');
-                overlay.style.transition = 'clip-path 0.65s cubic-bezier(0.4, 0, 0.2, 1)';
-                overlay.style.clipPath   = `circle(160% at ${ox} ${oy})`;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            overlay.classList.add('expanding');
+            overlay.style.transition = 'clip-path 0.65s cubic-bezier(0.4, 0, 0.2, 1)';
+            overlay.style.clipPath   = `circle(160% at ${ox} ${oy})`;
 
-                setTimeout(() => {
-                    document.body.classList.toggle('dark-theme', forceDark);
-                    localStorage.setItem('theme', forceDark ? 'dark' : 'light');
-                    document.querySelector('meta[name="theme-color"]')
-                        ?.setAttribute('content', forceDark ? '#7A6200' : '#FFD600');
-                }, 300);
+            setTimeout(() => {
+                document.body.classList.toggle('dark-theme', forceDark);
+                localStorage.setItem('theme', forceDark ? 'dark' : 'light');
+                document.querySelector('meta[name="theme-color"]')
+                    ?.setAttribute('content', forceDark ? '#7A6200' : '#FFD600');
+            }, 300);
 
-                setTimeout(() => {
-                    overlay.classList.remove('expanding');
-                    overlay.style.clipPath = 'circle(0% at 50% 50%)';
-                }, 680);
-            });
-        });
+            setTimeout(() => {
+                overlay.classList.remove('expanding');
+                overlay.style.clipPath = 'circle(0% at 50% 50%)';
+            }, 680);
+        }));
     }
-
 
     // ── SCROLL TO SECTION ─────────────────────────────────
     function voiceGoTo(id) {
-        // Uses the existing goTo() from index.html if available
         if (typeof goTo === 'function') {
             goTo(id);
         } else {
             const el = document.getElementById(id);
             if (!el) return;
             const navH = document.querySelector('.top-navbar')?.offsetHeight || 0;
-            const top  = el.getBoundingClientRect().top + window.scrollY - navH - 16;
-            window.scrollTo({ top, behavior: 'smooth' });
+            window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - navH - 16, behavior: 'smooth' });
         }
     }
 
-
-    // ── OPEN SECTIONS POPUP ───────────────────────────────
+    // ── SECTIONS POPUP ────────────────────────────────────
     function openSectionsPopup() {
         const popup = document.getElementById('sections-popup');
-        const btn   = document.getElementById('sections-btn');
         if (popup && typeof openPopup === 'function') {
             openPopup(popup);
-            btn?.classList.add('menu-open');
+            document.getElementById('sections-btn')?.classList.add('menu-open');
         }
     }
 
-
-    // ── OPEN TOOLS / MAGIC BOX POPUP ─────────────────────
+    // ── TOOLS / MAGIC BOX POPUP ───────────────────────────
     function openToolsPopup() {
         const popup = document.getElementById('tools-popup');
         if (popup && typeof openPopup === 'function') openPopup(popup);
     }
 
-
     // ── WEATHER ANIMATION ─────────────────────────────────
     function playWeather() {
         const strip = document.getElementById('weather-strip');
         const code  = window._lastWeatherCode ?? parseInt(strip?.dataset.code);
-        if (window.startWeatherScene && !isNaN(code)) {
-            window.startWeatherScene(code);
-        }
+        if (window.startWeatherScene && !isNaN(code)) window.startWeatherScene(code);
     }
-
 
     // ── SOCIAL LINKS ──────────────────────────────────────
     const social = {
@@ -118,7 +156,6 @@ document.addEventListener('touchstart', () => {
         linkedin:   'https://in.linkedin.com/in/rohit-pal-7a9a58372',
         threads:    'https://www.threads.com/@rohitpal_01',
     };
-
 
     // ── COMMAND HANDLER ───────────────────────────────────
     function handleCommand(t) {
@@ -135,7 +172,7 @@ document.addEventListener('touchstart', () => {
             triggerTheme(false); return;
         }
 
-        // WEATHER ANIMATION
+        // WEATHER
         if (['weather', 'play weather', "today's weather", 'now weather', 'weather condition', 'show me weather']
             .some(p => t.includes(p))) {
             playWeather(); return;
@@ -177,7 +214,7 @@ document.addEventListener('touchstart', () => {
             voiceGoTo('sec-projects'); return;
         }
 
-        // GALLERY / PHOTOS / TIMELESS MOMENTS
+        // GALLERY / PHOTOS
         if (['photos', 'show me photos', 'show me images', 'open images', 'open photos',
              'timeless moments', 'timeless', 'rohit pal photos', 'rohit pal images',
              'rohit photos', "rohit's photos", "rohit's images", 'images']
@@ -201,7 +238,7 @@ document.addEventListener('touchstart', () => {
             openSectionsPopup(); return;
         }
 
-        // MAGIC BOX / TOOLS POPUP
+        // MAGIC BOX
         if (['magic box', 'open magic box', 'show me magic box', 'show magic box']
             .some(p => t.includes(p))) {
             openToolsPopup(); return;
@@ -220,49 +257,15 @@ document.addEventListener('touchstart', () => {
         }
 
         // SOCIAL LINKS
-        if (t.includes('youtube'))                                    { window.open(social.youtube,    '_blank'); return; }
-        if (t.includes('instagram'))                                  { window.open(social.instagram,  '_blank'); return; }
-        if (t.includes('facebook'))                                   { window.open(social.facebook,   '_blank'); return; }
-        if (t.includes('snapchat'))                                   { window.open(social.snapchat,   '_blank'); return; }
-        if (t.includes('pinterest'))                                  { window.open(social.pinterest,  '_blank'); return; }
-        if (t.includes('google maps') || t.includes('google map'))   { window.open(social.googlemaps, '_blank'); return; }
-        if (t === 'x' || t.includes('twitter'))                      { window.open(social.twitter,    '_blank'); return; }
-        if (t.includes('linkedin') || t.includes('linked in'))       { window.open(social.linkedin,   '_blank'); return; }
-        if (t.includes('threads'))                                    { window.open(social.threads,    '_blank'); return; }
+        if (t.includes('youtube'))                                  { window.open(social.youtube,    '_blank'); return; }
+        if (t.includes('instagram'))                                { window.open(social.instagram,  '_blank'); return; }
+        if (t.includes('facebook'))                                 { window.open(social.facebook,   '_blank'); return; }
+        if (t.includes('snapchat'))                                 { window.open(social.snapchat,   '_blank'); return; }
+        if (t.includes('pinterest'))                                { window.open(social.pinterest,  '_blank'); return; }
+        if (t.includes('google maps') || t.includes('google map')) { window.open(social.googlemaps, '_blank'); return; }
+        if (t === 'x' || t.includes('twitter'))                    { window.open(social.twitter,    '_blank'); return; }
+        if (t.includes('linkedin') || t.includes('linked in'))     { window.open(social.linkedin,   '_blank'); return; }
+        if (t.includes('threads'))                                  { window.open(social.threads,    '_blank'); return; }
     }
-
-
-    // ── RECOGNITION EVENTS ────────────────────────────────
-    recognition.onresult = (event) => {
-        const t = event.results[event.results.length - 1][0].transcript
-                    .toLowerCase()
-                    .trim();
-                    showToast('Heard: ' + t);
-        handleCommand(t);
-    };
-
-    let isRunning = false;
-
-recognition.onstart = () => { isRunning = true; };
-
-recognition.onend = () => {
-    isRunning = false;
-    setTimeout(() => recognition.start(), 100);
-};
-
-recognition.onerror = (e) => {
-    isRunning = false;
-    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') return;
-    setTimeout(() => recognition.start(), 200);
-};
-
-// Mic stream green dot alive - stop blinking
-navigator.mediaDevices.getUserMedia({ audio: true })
-    .then(stream => {
-        window._voiceMicStream = stream;
-    })
-    .catch(() => {}); // silently fail
-
-recognition.start();
 
 })();
