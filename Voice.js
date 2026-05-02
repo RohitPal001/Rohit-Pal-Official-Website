@@ -183,19 +183,19 @@
         }
 
         // FAVOURITES
-        if (['favourites', "rohit's favourites", 'rohit pal favourites', 'rohit favourites', 'favourite']
+        if (['favourites', "rohit's favourites", 'rohit pal favourites', 'rohit favourites', 'favourite', 'imagine dragons', 'skills']
             .some(p => t.includes(p))) {
             voiceGoTo('sec-favourites'); return;
         }
 
         // EDUCATION
-        if (['education', 'rohit pal education', 'rohit education', "rohit's education", 'educational details']
+        if (['education', 'rohit pal education', 'rohit education', "rohit's education", 'educational details', 'educational qualifications', 'educational background']
             .some(p => t.includes(p))) {
             voiceGoTo('sec-education'); return;
         }
 
         // PROJECTS
-        if (['projects', 'project', 'open projects', 'rohit pal project', 'rohit projects', "rohit's projects", 'show me projects']
+        if (['projects', 'browser', 'rowser', 'project', 'open projects', 'rohit pal project', 'rohit projects', "rohit's projects", 'show me projects']
             .some(p => t.includes(p))) {
             voiceGoTo('sec-projects'); return;
         }
@@ -209,12 +209,12 @@
         }
 
         // ALSO KNOWN AS
-        if (['also known as', 'also know as'].some(p => t.includes(p))) {
+        if (['also known as', 'also know as', 'world wide data', 'world wide data rht', 'aka', 'a k a'].some(p => t.includes(p))) {
             voiceGoTo('sec-aka'); return;
         }
 
         // QUICK SEARCH
-        if (['open search bar', 'quick search'].some(p => t.includes(p)) || t === 'search') {
+        if (['open search bar', 'quick search', 'google', 'google search'].some(p => t.includes(p)) || t === 'search') {
             voiceGoTo('sec-search'); return;
         }
 
