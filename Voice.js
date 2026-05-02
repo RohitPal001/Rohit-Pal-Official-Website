@@ -8,68 +8,55 @@
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) return;
 
-    // ── Toast (debug) ─────────────────────────────────────
-    function showToast(msg) {
-        const t = document.createElement('div');
-        t.textContent = msg;
-        t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#FFC107;color:#000;padding:10px 20px;border-radius:999px;font-weight:700;z-index:99999;font-size:14px;white-space:nowrap;';
-        document.body.appendChild(t);
-        setTimeout(() => t.remove(), 3000);
-    }
-
     // ── Recognition setup ─────────────────────────────────
     let recognition = null;
     let running = false;
 
     function createRecognition() {
         const r = new SpeechRecognition();
-        r.continuous     = false;
-        r.interimResults = false;
+        r.continuous     = true;
+        r.interimResults = true;
         r.lang           = 'en-US';
 
-        r.onstart  = () => { running = true; showToast('✅ Listening'); };
-r.onend    = () => {
-    running = false;
-    showToast('🔄 Restarting');
-    setTimeout(startRecognition, 300);
-};
+        r.onstart  = () => { running = true; };
+        r.onend    = () => {
+            running = false;
+            setTimeout(startRecognition, 1000);
+        };
         r.onerror  = (e) => {
-    running = false;
-    showToast('❌ ' + e.error);
-    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') return;
-    setTimeout(startRecognition, 500);
-};
+            running = false;
+            if (e.error === 'not-allowed' || e.error === 'service-not-allowed') return;
+            setTimeout(startRecognition, 500);
+        };
         r.onresult = (event) => {
-            const t = event.results[event.results.length - 1][0].transcript
-                        .toLowerCase().trim();
-            showToast('🎤 ' + t);
+            const result = event.results[event.results.length - 1];
+            if (!result.isFinal) return;
+            const t = result[0].transcript.toLowerCase().trim();
             handleCommand(t);
         };
         return r;
     }
 
     function startRecognition() {
-    if (running) return;
-    showToast('🚀 Starting...');
-    try {
-        if (!recognition) recognition = createRecognition();
-        recognition.start();
-    } catch (e) {
-        showToast('💥 ' + e.message);
-        running = false;
-    }
+        if (running) return;
+        try {
+            if (!recognition) recognition = createRecognition();
+            recognition.start();
+        } catch (e) {
+            running = false;
+        }
     }
 
     // ── Start on first user touch (mobile requirement) ────
     let touched = false;
-    document.addEventListener('touchstart', function onFirst() {
+    document.addEventListener('touchstart', function () {
         if (touched) return;
         touched = true;
         startRecognition();
     }, { passive: true });
 
     // Also start on desktop click
-    document.addEventListener('click', function onFirstClick() {
+    document.addEventListener('click', function () {
         if (touched) return;
         touched = true;
         startRecognition();
