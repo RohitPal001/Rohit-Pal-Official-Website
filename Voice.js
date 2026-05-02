@@ -1,4 +1,20 @@
 (function () {
+	
+	let started = false;
+document.addEventListener('touchstart', () => {
+    if (!started) {
+        started = true;
+        recognition.start();
+    }
+}, { once: false });
+	
+	function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#FFC107;color:#000;padding:10px 20px;border-radius:999px;font-weight:700;z-index:99999;font-size:14px;';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 3000);
+}
 
     // ── Browser support check ─────────────────────────────
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -221,6 +237,7 @@
         const t = event.results[event.results.length - 1][0].transcript
                     .toLowerCase()
                     .trim();
+                    showToast('Heard: ' + t);
         handleCommand(t);
     };
 
