@@ -60,11 +60,6 @@ r.onend    = () => {
     }
     }
 
-    // ── Hold mic stream so green dot stays on ─────────────
-    navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => { window._voiceMicStream = stream; })
-        .catch(() => {});
-
     // ── Start on first user touch (mobile requirement) ────
     let touched = false;
     document.addEventListener('touchstart', function onFirst() {
