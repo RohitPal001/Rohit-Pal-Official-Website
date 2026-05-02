@@ -23,7 +23,7 @@
 
     function createRecognition() {
         const r = new SpeechRecognition();
-        r.continuous     = true;
+        r.continuous     = false;
         r.interimResults = false;
         r.lang           = 'en-US';
 
