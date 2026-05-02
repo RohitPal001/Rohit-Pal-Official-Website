@@ -27,11 +27,12 @@
         r.interimResults = false;
         r.lang           = 'en-US';
 
-        r.onstart  = () => { running = true; };
-        r.onend    = () => {
-            running = false;
-            setTimeout(startRecognition, 300);
-        };
+        r.onstart  = () => { running = true; showToast('✅ Listening'); };
+r.onend    = () => {
+    running = false;
+    showToast('🔄 Restarting');
+    setTimeout(startRecognition, 300);
+};
         r.onerror  = (e) => {
     running = false;
     showToast('❌ ' + e.error);
