@@ -33,10 +33,11 @@
             setTimeout(startRecognition, 300);
         };
         r.onerror  = (e) => {
-            running = false;
-            if (e.error === 'not-allowed' || e.error === 'service-not-allowed') return;
-            setTimeout(startRecognition, 500);
-        };
+    running = false;
+    showToast('❌ ' + e.error);
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') return;
+    setTimeout(startRecognition, 500);
+};
         r.onresult = (event) => {
             const t = event.results[event.results.length - 1][0].transcript
                         .toLowerCase().trim();
@@ -47,13 +48,15 @@
     }
 
     function startRecognition() {
-        if (running) return;
-        try {
-            if (!recognition) recognition = createRecognition();
-            recognition.start();
-        } catch (e) {
-            running = false;
-        }
+    if (running) return;
+    showToast('🚀 Starting...');
+    try {
+        if (!recognition) recognition = createRecognition();
+        recognition.start();
+    } catch (e) {
+        showToast('💥 ' + e.message);
+        running = false;
+    }
     }
 
     // ── Hold mic stream so green dot stays on ─────────────
